@@ -32,39 +32,40 @@
                     <td>Dirección</td>
                     <td>Vacantes</td>
                     <td>Email</td>
-                    <td>Fecha Nacimiento</td>
+                    <td>Fecha de Publicación</td>
                     <td>Operaciones</td>
                 </tr>
             </thead>
             <tbody>
-                {% for contact in contacts %}
+                {% for trabajo in trabajos %}
                 <tr>
-                    <td> {{ contact.1 }} </td>
-                    <td> {{ contact.2 }} </td>
-                    <td> {{ contact.3 }} </td>
-                    <td> {{ contact.4 }} </td>
-                    <td> {{ contact.5 }} </td>
-                    <td> {{ contact.6 }} </td>
+                    <td> {{ trabajo.0 }} </td>
+                    <td> {{ trabajo.2 }} </td>
+                    <td> {{ trabajo.1 }} </td>
+                    <td> {{ trabajo.4 }} </td>
+                    <td> {{ trabajo.7 }} </td>
+                    <td> {{ trabajo.3 }} </td>
                     <td>
-                        <a href="/edit/{{contact.0}}" class="btn btn-secondary">Editar</a>
-                        <a href="/delete/{{contact.0}}" class="btn btn-danger btn-delete">Eliminar</a>
-                        <a href="/view/{{contact.0}}" class="btn btn-primary">Ver</a>
+                        <a href="/edit/{{trabajo.0}}" class="btn btn-secondary">Editar</a>
+                        <a href="/delete/{{trabajo.0}}" class="btn btn-danger btn-delete">Eliminar</a>
+                        <a href="/view/{{trabajo.0}}" class="btn btn-primary">Ver</a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        {% for contact in contacts %}
+        {% for trabajo in trabajos %}
         <div class="card text-black bg-white mb-2" style="display: block;">
             
             <div class="card-body">
 
-                <h4 class="card-title">{{ contact.1 }}</h4>
-                <p class="card-text">la lista {{ contact.2 }} </p>
-                <a href="/view/{{contact.0}}" class="btn btn-success btn-sm">Ver</a>
-                <button type="button" class="btn btn-primary btn-sm">Dias</button>
-                <a href="/view/{{contact.0}}" class="btn btn-warning btn-sm" rigth style="float: right">Eliminar</a>
-                <a href="/view/{{contact.0}}" class="btn btn-info btn-sm" rigth style="float: right">Editar</a>
+                <h4 class="card-title">{{ trabajo.0 }} | {{trabajo.2}}</h4>
+                <p class="card-text"> {{ trabajo.1 }} </p>
+                <p class="card-text"> Busqueda Interna | Cod: {{ trabajo.0 }} | Vacantes: {{ trabajo.4 }} </p>
+                <a href="/view/{{trabajo.0}}" class="btn btn-success btn-sm">Ver</a>
+                <button type="button" class="btn btn-primary btn-sm">Dias: 2 </button>
+                <a href="/view/{{trabajo.0}}" class="btn btn-warning btn-sm" rigth style="float: right">Eliminar</a>
+                <a href="/view/{{trabajo.0}}" class="btn btn-info btn-sm" rigth style="float: right">Editar</a>
 
             </div>
             

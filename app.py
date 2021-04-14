@@ -30,9 +30,9 @@ def grid():
 @app.route('/gridjobs')
 def gridjobs():
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM contacts')
+    cur.execute('SELECT * FROM trabajos')
     data = cur.fetchall()
-    return render_template('gridjobs.html', contacts = data)
+    return render_template('gridjobs.html', trabajos = data)
 
 @app.route('/add_contact', methods= ['POST'])
 def add_contact():
