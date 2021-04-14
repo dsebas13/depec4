@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="col-md-4 offser-md-4">
+    <div class="card card-body">
+        <form action="/update/{{contact.0}}" method="POST">
+            <h5>Editar datos de: {{contact.1}} {{contact.2}} </h5>
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" name="nombre" placeholder="Ingrese su nombre" value="{{ contact.1 }}"  class="form-control">
+            </div>    
+            <div class="form-group">
+                <label for="apellido">Apellido</label>
+                <input type="text" name="apellido" placeholder="Ingrese su apellido" value="{{ contact.2 }}" class="form-control"> 
+            </div>
+            <div class="form-group">
+                <label for="telefono">Telefono</label>
+                <input type="number" name="telefono" placeholder="Ingrese el numero de telefono" value="{{ contact.3 }}" class="form-control">
+            </div> 
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" name="email" placeholder="Ingrese su email"  value="{{ contact.4 }}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="date">Fecha de Nacimiento:</label>
+                <input type="date" id="start" name="birthdate"  value="{{ contact.5 }}" class="form-control">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">
+                    Save
+                </button>
+                <a href="{{url_for('grid')}}" class="btn btn-primary">Regresar</a>
+
+ 
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

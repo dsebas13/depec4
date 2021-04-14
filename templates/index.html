@@ -1,0 +1,260 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+
+<div class="row">
+    <div class="col md-5">
+        <form action="/add_contact" method="POST">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h5>Primer paso: complete los datos personales</h5>
+                    </div>
+                </div>
+                <br>
+                <div class="card card-body">
+                    <div class="box-container container">
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>Datos Pesonales
+                                    <small class="pull-right" rigth style="float: right">
+                                        <span class="text-danger">*</span>
+                                        &nbsp; Campos Obligatorios &nbsp; &nbsp;
+                                    </small>
+                                </h5>
+                            </div>
+                        </div>
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="nombre"></label>Nombre *</label>
+                                <input type="text" name="nombre" placeholder="Ingrese su nombre" required minlength="2"
+                                    maxlength="50" size="50" class="form-control">
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="apellido"></label>Apellido *</label>
+                                <input type="text" name="apellido" placeholder="Ingrese su apellido" required
+                                    minlength="2" maxlength="50" size="50" class="form-control">
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="dni"></label>DNI *</label>
+                                <input type="number" name="dni" placeholder="Ingrese su dni" required minlength="4"
+                                    maxlength="8" size="8" class="form-control">
+                            </div>
+                        </div>
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="telefono"></label>Telefono *</label>
+                                <br>
+                                <input type="number" name="telefono" placeholder="Ingrese el numero de telefono"
+                                    required minlength="7" maxlength="20" size="50" class="form-control">
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="email">Email</label>
+                                <input type="email" name="email" placeholder="Ingrese su email" required minlength="4"
+                                    maxlength="50" size="50" class="form-control">
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="date">Fecha de Nacimiento:</label>
+                                </br>
+                                <input type="date" id="start" name="birthdate" value="2020-04-10" min="1950-01-01"
+                                    max="2020-04-10" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="container">
+                <div class="card card-body">
+                    <div class="box-container container">
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>Idiomas
+                                </h5>
+                            </div>
+                        </div>
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="idioma">Idioma</label>
+                                <select name="idioma" required class="form-control">
+                                    <option value="">Seleccione un nivel</option>
+                                    <option value="ingles">Ingles</option>
+                                    <option value="portugues">Portugues</option>
+                                    <option value="frances">Frances</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="niveloral">Nivel Oral</label>
+                                <select name="niveloral" required class="form-control">
+                                    <option value="">Seleccione un nivel</option>
+                                    <option value="basico">Inicial</option>
+                                    <option value="intermedio">Intermedio</option>
+                                    <option value="avanzado">Avanzado</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="nivelescrito">Nivel Escrito</label>
+                                <select name="nivelescrito" required class="form-control">
+                                    <option value="">Seleccione un nivel</option>
+                                    <option value="inicial">Inicial</option>
+                                    <option value="intermedio">Intermedio</option>
+                                    <option value="avanzado">Avanzado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="container">
+                <div class="card card-body">
+                    <div class="box-container container">
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>Dirección en la que desempeña sus tareas
+                                </h5>
+                            </div>
+                        </div>
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="direccion"></label>Dirección *</label>
+                                <select name="direccion" required class="form-control">
+                                    <option value="">Seleccione una dirección</option>
+                                    <option value="DI">DI - DIRECCIÓN DE INFORMATICA</option>
+                                    <option value="RRHH">RRHH - RECURSOS HUMANOS</option>
+                                    <option value="DNCN">DNCN - DIRECCIÓN NACIONAL DE CUANTAS NACIONALES</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="fechaIngreso">Fecha de Ingreso:</label>
+                                </br>
+                                <input type="date" id="start" name="fechaIngreso" min="1950-01-01" max="2020-04-13"
+                                    class="form-control">
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="puesto">Puesto:</label>
+                                <input type="text" name="puesto" required minlength="1" maxlength="50" size="50"
+                                    class="form-control">
+                            </div>
+
+                        </div>
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="tareas">Tareas realizadas:</label>
+                                <input type="text" name="tareas" required minlength="1" maxlength="50" size="50"
+                                    class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="container">
+                <div class="card card-body">
+                    <div class="box-container container">
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>Idiomas
+                                </h5>
+                            </div>
+                        </div>
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="idioma">Idioma</label>
+                                <select name="idioma" required class="form-control">
+                                    <option value="">Seleccione un nivel</option>
+                                    <option value="ingles">Ingles</option>
+                                    <option value="portugues">Portugues</option>
+                                    <option value="frances">Frances</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="level">Nivel Oral</label>
+                                <select name="level" required class="form-control">
+                                    <option value="">Seleccione un nivel</option>
+                                    <option value="Basico">Inicial</option>
+                                    <option value="Basico">Intermedio</option>
+                                    <option value="avanzado">Avanzado</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="level">Nivel Escrito</label>
+                                <select name="level" required class="form-control">
+                                    <option value="">Seleccione un nivel</option>
+                                    <option value="inicial">Inicial</option>
+                                    <option value="intermedio">Intermedio</option>
+                                    <option value="avanzado">Avanzado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <br>
+            <div class="form group">
+                <button type="submit" class="btn btn-primary" rigth style="float: right">
+                    Save
+                </button>
+            </div>
+
+            <!--                 </p>
+                <h1>Estudios Cursados</h1>
+                </p>
+                <h1>Idiomas</h1>
+                </p> -->
+            <!--     <h1>Conocimientos informáticos</h1>
+                <select name="drinks" required>
+                  <option value="" disabled selected hidden>Seleccione un nivel</option>
+                  <option value="inicial">Inicial</option>
+                  <option value="intermedio">Intermedio</option>
+                  <option value="avanzado">Avanzado</option>
+                </select> -->
+
+            <!-- 
+                <BUtton type="reset">
+                    Volver
+                </BUtton> -->
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+{% endblock%}
