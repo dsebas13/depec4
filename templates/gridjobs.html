@@ -3,7 +3,7 @@
 {% block body %}
 
 <div class="form group" rigth style="float: right">
-
+    
     <a href="/nuevopuesto" class="btn btn-primary">Nuevo</a>
 
 </div>
@@ -55,6 +55,8 @@
                 {% endfor %}
             </tbody>
         </table> -->
+        <h2>Cartelera de trabajos</h2>
+        <br>
         {% for trabajo in trabajos %}
         <div class="card text-black bg-white mb-2" style="display: block;">
             
@@ -62,10 +64,10 @@
                 <h4 class="card-title">{{ trabajo.0 }} | {{trabajo.2}}</h4>
                 <p class="card-text"> {{ trabajo.1 }} </p>
                 <p class="card-text"> Busqueda Interna | Cod: {{ trabajo.0 }} | Vacantes: {{ trabajo.4 }} </p>
-                <a href="/view/{{trabajo.0}}" class="btn btn-success btn-sm">Ver</a>
-                <button type="button" class="btn btn-primary btn-sm">Dias: 2 </button>
-                <a href="/view/{{trabajo.0}}" class="btn btn-warning btn-sm" rigth style="float: right">Eliminar</a>
-                <a href="/view/{{trabajo.0}}" class="btn btn-info btn-sm" rigth style="float: right">Editar</a>
+                <a href="/viewjob/{{trabajo.0}}" class="btn btn-success btn-sm">Ver</a>
+                <button type="button" class="btn btn-primary btn-sm">Dias: {{ trabajo.8 }} </button>
+                <a href="/deletejobs/{{trabajo.0}}" class="btn btn-warning btn-sm btn-delete" rigth style="float: right">Eliminar</a>
+                <a href="/editjobs/{{trabajo.0}}" class="btn btn-info btn-sm" rigth style="float: right">Editar</a>
 
             </div>
             

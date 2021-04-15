@@ -5,7 +5,7 @@
 
 <div class="row">
     <div class="col md-5">
-        <form action="/addnuevopuesto" method="POST">
+        <form action="/updatejobs/{{trabajos.0}}" method="POST">
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
@@ -31,7 +31,7 @@
                             <div class="col-sm-4">
                                 <label for="direccion"></label>Dirección *</label>
                                 <select name="direccion" required class="form-control">
-                                    <option value="">Seleccione un nivel</option>
+                                    <option selected="selected" class="d-none">{{ trabajos.1 }}</option>
                                     <option value="DI">Direccion de Informatica</option>
                                     <option value="DNCN">Direccion Nacional de Cuentas Nacionales</option>
                                     <option value="RRHH">Direccion Nacional de Recurso Humanos</option>
@@ -41,7 +41,7 @@
                             <div class="col-sm-4">
                                 <label for="puesto"></label>Puesto *</label>
                                 <input type="text" name="puesto" placeholder="Descripción del cargo" required
-                                    minlength="2" maxlength="50" size="50" class="form-control">
+                                    minlength="2" maxlength="50" size="50" class="form-control" value="{{ trabajos.2 }}"> 
                             </div>
                         </div>
                         </br>
@@ -49,13 +49,12 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="fecha">Fecha:</label>
-                                <input type="date" id="start" name="fecha" min="1950-01-01"
-                                max="2021-04-14" class="form-control">
+                                <input type="date" id="start" name="fecha" max="{{ trabajos.8 }}" value="{{ trabajos.3 }}" class="form-control">
                             </div>
                             <div class="col-sm-4" >
                                 <label for="vacantes"></label>Cantidad de vacantes *</label>
                                 <input type="number" name="vacantes" placeholder="Ingrese cantidad de puestos a ocupar"
-                                    required minlength="1" maxlength="20" size="20" class="form-control">
+                                    required minlength="1" maxlength="20" value="{{ trabajos.4 }}" class="form-control">
                             </div>
                         </div>
                         </br>
@@ -64,12 +63,12 @@
                             <div class="col-sm-4">
                                 <label for="alcance"></label>Alcance *</label>
                                 <input type="text" name="alcance" placeholder="Ingrese el alcance del puesto" required
-                                    minlength="2" maxlength="100" size="100" class="form-control">
+                                    minlength="2" maxlength="100" value="{{ trabajos.5 }}" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="tareas"></label>Tareas *</label>
                                 <input type="text" name="tareas" placeholder="Ingrese las tareas" required
-                                    minlength="2" maxlength="100" size="100" class="form-control">
+                                    minlength="2" maxlength="100" value="{{ trabajos.6 }}" class="form-control">
                             </div>
                         </div>
 
@@ -78,7 +77,7 @@
                             <div class="col-sm-4">
                                 <label for="contacto">Contacto</label>
                                 <input type="email" name="contacto" placeholder="Ingrese un email de contacto" required minlength="4"
-                                    maxlength="50" size="50" class="form-control">
+                                    maxlength="50" value="{{ trabajos.7 }}" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -87,7 +86,7 @@
                 <br>
                 <div class="form group">
                     <button type="submit" class="btn btn-primary" rigth style="float: right">
-                        Crear Puesto
+                        Actualizar datos
                     </button>
                     <a href="{{url_for('gridjobs')}}" class="btn btn-danger">Regresar</a>
                 </div>
