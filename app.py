@@ -34,6 +34,30 @@ def gridjobs():
     data = cur.fetchall()
     return render_template('gridjobs.html', trabajos = data)
 
+@app.route('/nuevopuesto')
+def nuevopuesto():
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM trabajos')
+    data = cur.fetchall()
+    return render_template('nuevopuesto.html', trabajos = data)
+
+@app.route('/addnuevopuesto', methods= ['POST'])
+def addnuevopuesto():
+    if request.method == 'POST':
+        direccion = request.form['direccion']
+        puesto = request.form['puesto']
+        fecha = request.form['fecha']
+        vacantes = request.form['vacantes']
+        alcance = request.form['alcance']
+        tareas = request.form['tareas']
+        contacto = request.form['contacto']
+        cur = mysql.connection.cursor()
+        cur.execute('INSERT INTO trabajos (direccion, puesto, fecha, vacantes, alcance, tareas, contacto) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+        (direccion, puesto, fecha, vacantes, alcance, tareas, contacto))
+        mysql.connection.commit()
+        flash('Puesto agregado correctamente')
+        return redirect(url_for('gridjobs'))
+
 @app.route('/add_contact', methods= ['POST'])
 def add_contact():
     if request.method == 'POST':

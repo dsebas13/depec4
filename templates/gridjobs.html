@@ -20,10 +20,11 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+        
         {% endfor %}
         {% endif %}
         {% endwith %}
-        <table class="table table-striped table-bordered bg-white table-sm">
+<!--         <table class="table table-striped table-bordered bg-white table-sm">
             <h2>Cartelera</h2>
             <thead>
                 <tr>
@@ -53,12 +54,11 @@
                 </tr>
                 {% endfor %}
             </tbody>
-        </table>
+        </table> -->
         {% for trabajo in trabajos %}
         <div class="card text-black bg-white mb-2" style="display: block;">
             
             <div class="card-body">
-
                 <h4 class="card-title">{{ trabajo.0 }} | {{trabajo.2}}</h4>
                 <p class="card-text"> {{ trabajo.1 }} </p>
                 <p class="card-text"> Busqueda Interna | Cod: {{ trabajo.0 }} | Vacantes: {{ trabajo.4 }} </p>

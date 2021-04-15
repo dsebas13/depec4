@@ -1,0 +1,94 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+
+<div class="row">
+    <div class="col md-5">
+        <form action="/addnuevopuesto" method="POST">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h5>Primer paso: complete los datos personales</h5>
+                    </div>
+                </div>
+                <br>
+                <div class="card card-body">
+                    <div class="box-container container">
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>Datos Pesonales
+                                    <small class="pull-right" rigth style="float: right">
+                                        <span class="text-danger">*</span>
+                                        &nbsp; Campos Obligatorios &nbsp; &nbsp;
+                                    </small>
+                                </h5>
+                            </div>
+                        </div>
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="direccion"></label>Dirección *</label>
+                                <select name="direccion" required class="form-control">
+                                    <option value="">Seleccione un nivel</option>
+                                    <option value="DI">Direccion de Informatica</option>
+                                    <option value="DNCN">Direccion Nacional de Cuentas Nacionales</option>
+                                    <option value="RRHH">Direccion Nacional de Recurso Humanos</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="puesto"></label>Puesto *</label>
+                                <input type="text" name="puesto" placeholder="Descripción del cargo" required
+                                    minlength="2" maxlength="50" size="50" class="form-control">
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="fecha">Fecha:</label>
+                                <input type="date" id="start" name="fecha" value="2020-04-14" min="1950-01-01"
+                                max="2020-04-14" class="form-control">
+                            </div>
+                        </div>
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="vacantes"></label>Vacante *</label>
+                                <br>
+                                <input type="number" name="vacantes" placeholder="Ingrese cantidad de puestos a ocupar"
+                                    required minlength="1" maxlength="20" size="20" class="form-control">
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="alcance"></label>Alcance *</label>
+                                <input type="text" name="alcance" placeholder="Ingrese el alcance del puesto" required
+                                    minlength="2" maxlength="100" size="100" class="form-control">
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="tareas"></label>Tareas *</label>
+                                <input type="text" name="tareas" placeholder="Ingrese las tareas" required
+                                    minlength="2" maxlength="100" size="100" class="form-control">
+                            </div>
+                            <div class="col-sm-4">
+                                <br>
+                                <label for="contacto">Contacto</label>
+                                <input type="email" name="contacto" placeholder="Ingrese un email de contacto" required minlength="4"
+                                    maxlength="50" size="50" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form group">
+                <button type="submit" class="btn btn-primary" rigth style="float: right">
+                    Crear Puesto
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}
