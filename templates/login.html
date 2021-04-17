@@ -1,0 +1,43 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" type="image/png" href="static\image\soloLogo_Indec.png" />
+    <!-- <link rel="stylesheet" href="https://bootswatch.com/4/materia/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css')}}">
+
+</head>
+
+<div class="row">
+    <div class="col md-10">
+
+        <div class="container">
+
+            <div class="card text-black bg-white" style="display: block;">
+                <form action="/" method="POST">
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    {% for message in messages %}
+
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    <label> USERNAME </label><br>
+                    <input type="username" name="u" type="text" placeholder="Ingrese su usuario"><br>
+                    <label> PASSWORD </label><br>
+                    <input type="password" name="p" placeholder="Ingrese su contraseña"><br>
+                    <input type="submit"><br><br>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -54,7 +54,7 @@ def esCUITValida(cuit):
 
 if __name__ == "__main__":
     while True:
-        print "Para salir ingrese 'Salir'"
+        print "'Para salir ingrese 'Salir'"
         cuit = raw_input('Ingrese la CUIT:\t')
         if cuit == 'Salir' or cuit == 'salir':
             break
