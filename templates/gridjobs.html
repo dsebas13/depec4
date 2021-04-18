@@ -24,37 +24,6 @@
         {% endfor %}
         {% endif %}
         {% endwith %}
-<!--         <table class="table table-striped table-bordered bg-white table-sm">
-            <h2>Cartelera</h2>
-            <thead>
-                <tr>
-                    <td>Codigo</td>
-                    <td>Puesto</td>
-                    <td>Dirección</td>
-                    <td>Vacantes</td>
-                    <td>Email</td>
-                    <td>Fecha de Publicación</td>
-                    <td>Operaciones</td>
-                </tr>
-            </thead>
-            <tbody>
-                {% for trabajo in trabajos %}
-                <tr>
-                    <td> {{ trabajo.0 }} </td>
-                    <td> {{ trabajo.2 }} </td>
-                    <td> {{ trabajo.1 }} </td>
-                    <td> {{ trabajo.4 }} </td>
-                    <td> {{ trabajo.7 }} </td>
-                    <td> {{ trabajo.3 }} </td>
-                    <td>
-                        <a href="/edit/{{trabajo.0}}" class="btn btn-secondary">Editar</a>
-                        <a href="/delete/{{trabajo.0}}" class="btn btn-danger btn-delete">Eliminar</a>
-                        <a href="/view/{{trabajo.0}}" class="btn btn-primary">Ver</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table> -->
         <h2>Cartelera de trabajos</h2>
         <br>
         {% for trabajo in trabajos %}
