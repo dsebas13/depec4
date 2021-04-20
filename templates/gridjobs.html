@@ -2,11 +2,13 @@
 
 {% block body %}
 
+{% if session['rol'] == 'admin' %}
 <div class="form group" rigth style="float: right">
     
     <a href="/nuevopuesto" class="btn btn-primary">Nuevo</a>
 
 </div>
+{% endif %}
 
 <div class="row">
     <div class="col md-7">
@@ -35,9 +37,10 @@
                 <p class="card-text"> Busqueda Interna | Cod: {{ trabajo.0 }} | Vacantes: {{ trabajo.4 }} </p>
                 <a href="/viewjob/{{trabajo.0}}" class="btn btn-success btn-sm">Ver</a>
                 <button type="button" class="btn btn-primary btn-sm">Dias: {{ trabajo.8 }} </button>
+                {% if session['rol'] == 'admin' %}
                 <a href="/deletejobs/{{trabajo.0}}" class="btn btn-warning btn-sm btn-delete" rigth style="float: right">Eliminar</a>
                 <a href="/editjobs/{{trabajo.0}}" class="btn btn-info btn-sm" rigth style="float: right">Editar</a>
-
+                {% endif %}
             </div>
             
         </div>

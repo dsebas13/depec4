@@ -2,12 +2,13 @@
 
 {% block body %}
 
+{% if session['rol'] == 'admin' %}
 <div class="form group" rigth style="float: right">
 
     <a href="/csv" class="btn btn-primary">Nuevo</a>
 
 </div>
-
+{% endif %}
 <div class="row">
     <div class="col md-7">
         {% with messages = get_flashed_messages() %}
@@ -47,7 +48,9 @@
                     <td> {{ contact.5 }} </td>
                     <td>
                         <a href="/edit/{{contact.0}}" class="btn btn-secondary">Edit</a>
+                        {% if session['rol'] == 'admin' %}
                         <a href="/delete/{{contact.0}}" class="btn btn-danger btn-delete">Delete</a>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

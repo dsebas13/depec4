@@ -93,9 +93,11 @@
     <br>
     <br>
     <div class="form group">
+      {% if session['rol'] == 'admin' %}
       <button type="submit" class="btn btn-primary" rigth style="float: right">
         Crear Puesto
       </button>
+      {% endif %}
       <a href="{{url_for('gridjobs')}}" class="btn btn-danger">Regresar</a>
     </div>
   </div>
