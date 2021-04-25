@@ -5,7 +5,7 @@
 
 <div class="row">
     <div class="col md-5">
-        <form action="/add_contact" method="POST">
+        <form action="/add_cv" method="POST">
             {% with messages = get_flashed_messages() %}
             {% if messages %}
             {% for message in messages %}
@@ -73,8 +73,8 @@
                             <div class="col-sm-4">
                                 <label for="date">Fecha de Nacimiento:</label>
                                 </br>
-                                <input type="date" id="start" name="birthdate" value="{{ contacts.4 }}" min="1950-01-01"
-                                    max="{{ contacts.4 }}" class="form-control">
+                                <input type="date" id="start" name="birthdate" value="{{ cv.4 }}" min="1950-01-01"
+                                    max="{{ cv.4 }}" class="form-control">
                             </div>
                         </div>
                     </div>

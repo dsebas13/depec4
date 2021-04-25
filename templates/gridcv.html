@@ -2,10 +2,10 @@
 
 {% block body %}
 
-{% if session['rol'] == 'admin' %}
+{% if session['rol'] == 1 %}
 <div class="form group" rigth style="float: right">
 
-    <a href="/csv" class="btn btn-primary">Nuevo</a>
+    <a href="/cv" class="btn btn-primary">Nuevo</a>
 
 </div>
 {% endif %}
@@ -38,18 +38,18 @@
                 </tr>
             </thead>
             <tbody>
-                {% for contact in contacts %}
+                {% for c in cv %}
                 <tr>
-                    <td> {{ contact.1 }} </td>
-                    <td> {{ contact.2 }} </td>
-                    <td> {{ contact.6 }} </td>
-                    <td> {{ contact.3 }} </td>
-                    <td> {{ contact.4 }} </td>
-                    <td> {{ contact.5 }} </td>
+                    <td> {{ c.1 }} </td>
+                    <td> {{ c.2 }} </td>
+                    <td> {{ c.6 }} </td>
+                    <td> {{ c.3 }} </td>
+                    <td> {{ c.4 }} </td>
+                    <td> {{ c.5 }} </td>
                     <td>
-                        <a href="/edit/{{contact.0}}" class="btn btn-secondary">Edit</a>
-                        {% if session['rol'] == 'admin' %}
-                        <a href="/delete/{{contact.0}}" class="btn btn-danger btn-delete">Delete</a>
+                        <a href="/edit/{{c.0}}" class="btn btn-secondary">Edit</a>
+                        {% if session['rol'] == 1 %}
+                        <a href="/delete/{{c.0}}" class="btn btn-danger btn-delete">Delete</a>
                         {% endif %}
                     </td>
                 </tr>

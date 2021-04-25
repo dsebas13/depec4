@@ -88,3 +88,7 @@ background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9); /* W3C, IE 10+
   .login-box a:hover {
     color: #fff;
   }
+
+  .position-fixed {
+    position: relative;
+  }

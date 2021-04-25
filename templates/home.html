@@ -2,11 +2,13 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<h1>  {{contacts.1}}  </h1>
 <h1> Bienvenido {{session['name']}} {{session['surname']}}  </h1>
 
-<h1>Su rol es: {{session['rol']}}</h1>
-
+{% if session['rol'] == 1 %}
+<h1>Su rol es: 'Admin'</h1>
+{% else %}
+<h1>Su rol es: 'user'</h1>
+{% endif %}
 
 
 

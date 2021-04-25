@@ -2,10 +2,11 @@
 
 {% block body %}
 
-{% if session['rol'] == 'admin' %}
-<div class="form group" rigth style="float: right">
+{% if session['rol'] == 1 %}
+
+<div class="position-fixed" style="right: 200px;">
     
-    <a href="/nuevopuesto" class="btn btn-primary">Nuevo</a>
+    <a href="/nuevopuesto" class="btn btn-primary" rigth style="float: right">Nuevo</a>
 
 </div>
 {% endif %}
@@ -26,20 +27,20 @@
         {% endfor %}
         {% endif %}
         {% endwith %}
-        <h2>Cartelera de trabajos</h2>
+        <h2 class="position-fixed" style="margin-top: -20px;">Cartelera de busqueda</h2>
         <br>
-        {% for trabajo in trabajos %}
+        {% for b in busqueda %}
         <div class="card text-black bg-white mb-2" style="display: block;">
             
             <div class="card-body">
-                <h4 class="card-title">{{ trabajo.0 }} | {{trabajo.2}}</h4>
-                <p class="card-text"> {{ trabajo.1 }} </p>
-                <p class="card-text"> Busqueda Interna | Cod: {{ trabajo.0 }} | Vacantes: {{ trabajo.4 }} </p>
-                <a href="/viewjob/{{trabajo.0}}" class="btn btn-success btn-sm">Ver</a>
-                <button type="button" class="btn btn-primary btn-sm">Dias: {{ trabajo.8 }} </button>
-                {% if session['rol'] == 'admin' %}
-                <a href="/deletejobs/{{trabajo.0}}" class="btn btn-warning btn-sm btn-delete" rigth style="float: right">Eliminar</a>
-                <a href="/editjobs/{{trabajo.0}}" class="btn btn-info btn-sm" rigth style="float: right">Editar</a>
+                <h4 class="card-title">{{ b.0 }} | {{b.2}}</h4>
+                <p class="card-text"> {{ b.1 }} </p>
+                <p class="card-text"> Busqueda Interna | Cod: {{ b.0 }} | Vacantes: {{ b.4 }} </p>
+                <a href="/viewjob/{{b.0}}" class="btn btn-success btn-sm">Ver</a>
+                <button type="button" class="btn btn-primary btn-sm">Dias: {{ b.8 }} </button>
+                {% if session['rol'] == 1 %}
+                <a href="/deletejobs/{{b.0}}" class="btn btn-warning btn-sm btn-delete" rigth style="float: right">Eliminar</a>
+                <a href="/editjobs/{{b.0}}" class="btn btn-info btn-sm" rigth style="float: right">Editar</a>
                 {% endif %}
             </div>
             

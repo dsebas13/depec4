@@ -6,12 +6,12 @@
 
 <div class="row">
     <div class="col md-5">
-        <form action="/updatecontact/{{contacts.0}}" method="POST">
+        <form action="/updatecv/{{cv.0}}" method="POST">
             
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h5>Editar datos de: {{contacts.1}} {{contacts.2}} </h5>
+                        <h5>Editar datos de: {{cv.1}} {{cv.2}} </h5>
                     </div>
                 </div>
                 <br>
@@ -33,17 +33,17 @@
                             <div class="col-sm-4">
                                 <label for="nombre"></label>Nombre *</label>
                                 <input type="text" name="nombre" placeholder="Ingrese su nombre" required minlength="2"
-                                    maxlength="50"  value="{{ contacts.1 }}" class="form-control">
+                                    maxlength="50"  value="{{ cv.1 }}" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="apellido"></label>Apellido *</label>
                                 <input type="text" name="apellido" placeholder="Ingrese su apellido" required
-                                    minlength="2" maxlength="50" value="{{ contacts.2 }}" class="form-control">
+                                    minlength="2" maxlength="50" value="{{ cv.2 }}" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="dni"></label>DNI *</label>
                                 <input type="number" name="dni" placeholder="Ingrese su dni" required minlength="4"
-                                    maxlength="8" value="{{ contacts.6 }}" class="form-control">
+                                    maxlength="8" value="{{ cv.6 }}" class="form-control">
                             </div>
                         </div>
                         </p>
@@ -52,18 +52,18 @@
                                 <label for="telefono"></label>Telefono *</label>
                                 <br>
                                 <input type="number" name="telefono" placeholder="Ingrese el numero de telefono"
-                                    required minlength="7" maxlength="20" value="{{ contacts.3 }}" class="form-control">
+                                    required minlength="7" maxlength="20" value="{{ cv.3 }}" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="email">Email</label>
                                 <input type="email" name="email" placeholder="Ingrese su email" required minlength="4"
-                                    maxlength="50" value="{{ contacts.4 }}" class="form-control">
+                                    maxlength="50" value="{{ cv.4 }}" class="form-control">
                             </div>
                             <div class="col-sm-4">
                                 <label for="date">Fecha de Nacimiento:</label>
                                 </br>
-                                <input type="date" id="start" name="birthdate" value="{{ contacts.5 }}" min="1950-01-01"
-                                    max="{{ contacts.the_time }}" class="form-control">
+                                <input type="date" id="start" name="birthdate" value="{{ cv.5 }}" min="1950-01-01"
+                                    max="{{ cv.the_time }}" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -87,7 +87,7 @@
                             <div class="col-sm-4">
                                 <label for="idioma">Idioma</label>
                                 <select name="idioma" required class="form-control">
-                                    <option selected="selected" class="d-none">{{ contacts.7 }}</option>
+                                    <option selected="selected" class="d-none">{{ cv.7 }}</option>
                                     <option value="ingles">Ingles</option>
                                     <option value="portugues">Portugues</option>
                                     <option value="frances">Frances</option>
@@ -96,7 +96,7 @@
                             <div class="col-sm-4">
                                 <label for="niveloral">Nivel Oral</label>
                                 <select name="niveloral" required class="form-control">
-                                    <option selected="selected" class="d-none">{{ contacts.8 }}</option>
+                                    <option selected="selected" class="d-none">{{ cv.8 }}</option>
                                     <option value="basico">Inicial</option>
                                     <option value="intermedio">Intermedio</option>
                                     <option value="avanzado">Avanzado</option>
@@ -105,7 +105,7 @@
                             <div class="col-sm-4">
                                 <label for="nivelescrito">Nivel Escrito</label>
                                 <select name="nivelescrito" required class="form-control">
-                                    <option selected="selected" class="d-none">{{ contacts.9 }}</option>
+                                    <option selected="selected" class="d-none">{{ cv.9 }}</option>
                                     <option value="inicial">Inicial</option>
                                     <option value="intermedio">Intermedio</option>
                                     <option value="avanzado">Avanzado</option>
@@ -122,7 +122,7 @@
                 <button type="submit" class="btn btn-success" style="float: right;">
                     Grabar
                 </button>
-                <a href="{{url_for('grid')}}" class="btn btn-primary">Regresar</a>
+                <a href="{{url_for('gridcv')}}" class="btn btn-primary">Regresar</a>
             </div>
         </form>
     </div>
