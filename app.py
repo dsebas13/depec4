@@ -149,7 +149,7 @@ def gridjobs():
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
-    cur.execute('SELECT *,datediff(CURRENT_DATE, fecha) as dias FROM busqueda order by dias')
+    cur.execute('SELECT *,datediff(CURRENT_DATE, fecha) as dias FROM busqueda join direccion on id_direccion = direccion.id order by dias')
     data = cur.fetchall()
     return render_template('gridjobs.html', busqueda = data)
 
@@ -162,7 +162,7 @@ def viewjob(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html')
-    cur.execute('SELECT *,datediff(CURRENT_DATE, fecha) as dias FROM busqueda WHERE id = {0}'.format(id))
+    cur.execute('SELECT *,datediff(CURRENT_DATE, fecha) as dias FROM busqueda join direccion on id_direccion = direccion.id WHERE busqueda.id = {0}'.format(id))
     data = cur.fetchall()
     return render_template('viewjob.html', busqueda = data[0])
 
@@ -176,9 +176,11 @@ def nuevopuesto():
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
     if session['rol'] == 1:
-        cur.execute('SELECT *,CURRENT_DATE as hoy FROM busqueda')
+        cur.execute('SELECT *,CURRENT_DATE as dia FROM direccion')
+        direc = cur.fetchall()
+        cur.execute('SELECT *,CURRENT_DATE as hoy FROM busqueda join direccion on id_direccion = direccion.id')
         data = cur.fetchall()
-        return render_template('nuevopuesto.html', busqueda = data)
+        return render_template('nuevopuesto.html', busqueda = data, direcccio = direc )
     else:
         return render_template('home.html')  
 
@@ -192,12 +194,47 @@ def editjobs(id):
         flash('Sesion vencida o cerrada')
         return render_template('login.html')
     if session['rol'] == 1:
-        cur.execute('SELECT *,CURRENT_DATE as dia FROM busqueda WHERE id = {0}'.format(id))
+        cur.execute('SELECT *,CURRENT_DATE as dia FROM direccion')
+        direc = cur.fetchall()
+        cur.execute('SELECT *,CURRENT_DATE as dia FROM busqueda join direccion on id_direccion = direccion.id WHERE busqueda.id = {0}'.format(id))
         data = cur.fetchall()
-        return render_template('editjobs.html', busqueda = data[0])
+        return render_template('editjobs.html', busqueda = data[0], direcccio = direc)
     else:
         return render_template('home.html')  
-    
+
+# post actualizacion puesto
+@app.route('/updatejobs/<string:id>', methods = ['GET', 'POST'])
+def updatejobs(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    if request.method == 'POST':
+        id_direccion = str(request.form['iddireccion'][:2])
+        puesto = request.form['puesto']
+        fecha = request.form['fecha']
+        vacantes = request.form['vacantes']
+        alcance = request.form['alcance']
+        tareas = request.form['tareas']
+        contacto = request.form['contacto']
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            UPDATE busqueda
+            SET id_direccion = %s,
+                puesto = %s,
+                fecha = %s,
+                vacantes = %s,
+                alcance = %s,
+                tareas = %s,
+                contacto = %s
+            WHERE id = %s
+        """, (id_direccion, puesto, fecha, vacantes, alcance, tareas, contacto, id))
+        mysql.connection.commit()
+        flash('Puesto actualizado correctamente')
+        return redirect(url_for('gridjobs'))
+
 # post nuevo puesto
 @app.route('/addnuevopuesto', methods= ['POST'])
 def addnuevopuesto():
@@ -209,7 +246,7 @@ def addnuevopuesto():
         return render_template('login.html') 
     if session['rol'] == 1:
         if request.method == 'POST':
-            direccion = request.form['direccion']
+            id_direccion = str(request.form['iddireccion'][:2])
             puesto = request.form['puesto']
             fecha = request.form['fecha']
             vacantes = request.form['vacantes']
@@ -217,8 +254,8 @@ def addnuevopuesto():
             tareas = request.form['tareas']
             contacto = request.form['contacto']
             cur = mysql.connection.cursor()
-            cur.execute('INSERT INTO busqueda (direccion, puesto, fecha, vacantes, alcance, tareas, contacto) VALUES (%s, %s, %s, %s, %s, %s, %s)',
-            (direccion, puesto, fecha, vacantes, alcance, tareas, contacto))
+            cur.execute('INSERT INTO busqueda (id_direccion, puesto, fecha, vacantes, alcance, tareas, contacto) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+            (id_direccion, puesto, fecha, vacantes, alcance, tareas, contacto))
             mysql.connection.commit()
             flash('Puesto agregado correctamente')
             return redirect(url_for('gridjobs'))
@@ -251,38 +288,6 @@ def add_cv():
         flash('Contact Added succefully')
         return redirect(url_for('Index'))
 
-# post actualizacion puesto
-@app.route('/updatejobs/<string:id>', methods = ['POST'])
-def updatejobs(id):
-    cur = mysql.connection.cursor()
-    if 'loggedin' in session:
-        pass
-    else:        
-        flash('Sesion vencida o cerrada')
-        return render_template('login.html') 
-    if request.method == 'POST':
-        direccion = request.form['direccion']
-        puesto = request.form['puesto']
-        fecha = request.form['fecha']
-        vacantes = request.form['vacantes']
-        alcance = request.form['alcance']
-        tareas = request.form['tareas']
-        contacto = request.form['contacto']
-        cur = mysql.connection.cursor()
-        cur.execute("""
-            UPDATE busqueda
-            SET direccion = %s,
-                puesto = %s,
-                fecha = %s,
-                vacantes = %s,
-                alcance = %s,
-                tareas = %s,
-                contacto = %s
-            WHERE id = %s
-        """, (direccion, puesto, fecha, vacantes, alcance, tareas, contacto, id))
-        mysql.connection.commit()
-        flash('Puesto actualizado correctamente')
-        return redirect(url_for('gridjobs'))
 
 # post actualizacion cv
 @app.route('/updatecv/<string:id>', methods = ['POST'])

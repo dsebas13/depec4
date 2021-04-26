@@ -29,12 +29,12 @@
                         </p>
                         <div class="row">
                             <div class="col-sm-4">
-                                <label for="direccion"></label>Dirección *</label>
-                                <select name="direccion" required class="form-control">
-                                    <option value="">Seleccione un nivel</option>
-                                    <option value="DI">Direccion de Informatica</option>
-                                    <option value="DNCN">Direccion Nacional de Cuentas Nacionales</option>
-                                    <option value="RRHH">Direccion Nacional de Recurso Humanos</option>
+                                <label for="iddireccion"></label>Dirección *</label>
+                                <select name="iddireccion" id="iddireccion"  required class="selectpicker form-control">
+                                    <option value="">Seleccione una dirección</option>
+                                    {% for d in direcccio %}
+                                    <option value="{{ d.0 }}">{{ d.0 }} - {{ d.1 }}</option>
+                                    {% endfor %}    
                                 </select>
                             </div>
                             &nbsp; &nbsp; &nbsp;
