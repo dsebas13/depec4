@@ -2,8 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 
 from flask_mysqldb import MySQL
 
-
 #mySql conection
+
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
@@ -18,7 +18,7 @@ mysql = MySQL(app)
 app.config['SECRET_KEY'] = 'mysecretkey'
 
 
-# login
+# HOME
 #revisar
 @app.route('/home')
 def home():
@@ -31,15 +31,15 @@ def home():
     if session['rol'] == 1:
         cur.execute('SELECT * FROM cv')
     else:
-        cur.execute('SELECT * FROM cv WHERE dni = %s', [session['dni']])
+        cur.execute('SELECT * FROM cv join usuario on cv.id_usuario = usuario.id WHERE dni = %s', [session['dni']])
         data = cur.fetchall()
         return render_template('home.html', cv = data, session = session)
     cur.execute('SELECT * FROM cv inner join usuario on cv.id_usuario = usuario.id  WHERE dni = %s', [session['dni']])
     conta = cur.fetchall()
     return render_template('home.html', session = session, cv = conta)
+
 @app.route('/')
 def my_form():
-    
     if 'loggedin' in session:
         cur = mysql.connection.cursor()
         cur.execute('SELECT * FROM cv')
@@ -48,6 +48,7 @@ def my_form():
     else:
         return render_template('login.html')
 
+# LOGIN
 @app.route('/', methods= ['POST'])
 def login():
     username = request.form['u']
@@ -84,6 +85,7 @@ def profile():
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
+# CV
 # pantalla carga cv
 @app.route('/cv')
 def Index():
@@ -96,7 +98,7 @@ def Index():
     if session['rol'] == 1:
         cur.execute('SELECT *,CURRENT_DATE FROM cv')
     else:
-        cur.execute('SELECT * FROM cv WHERE dni = %s', [session['dni']])
+        cur.execute('SELECT * FROM cv join usuario on cv.id_usuario = usuario.id WHERE dni = %s', [session['dni']])
         data = cur.fetchall()
         if data:
             return render_template('home.html', cv = data, session = session) 
@@ -114,17 +116,11 @@ def gridcv():
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
-    if session['rol'] == 1:
-        cur.execute('SELECT *,CURRENT_DATE FROM cv')
-        data = cur.fetchall()
-    else:
-        cur.execute('SELECT * FROM cv WHERE dni = %s', [session['dni']])
-        data = cur.fetchall()
-        if data:
-            pass
-        else:
-            return render_template('home.html', cv = data, session = session)   
-    return render_template('gridcv.html', cv = data, session = session)
+    cur.execute('SELECT * FROM cv join usuario on cv.id_usuario = usuario.id')
+    data = cur.fetchall()
+    cur.execute('SELECT * FROM cv join usuario on cv.id_usuario = usuario.id WHERE dni = %s', [session['dni']])
+    datacv = cur.fetchall()
+    return render_template('gridcv.html', cv = data, cvuser = datacv)
 
         
 # pantalla edicion cv
@@ -136,7 +132,7 @@ def get_cv(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
-    cur.execute('SELECT * FROM cv WHERE id = {0}'.format(id))
+    cur.execute('SELECT * FROM cv join usuario on cv.id_usuario = usuario.id WHERE cv.id = {0}'.format(id))
     data = cur.fetchall()
     return render_template('edit-cv.html', cv = data[0])
 
@@ -149,9 +145,12 @@ def gridjobs():
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
-    cur.execute('SELECT *,datediff(CURRENT_DATE, fecha) as dias FROM busqueda join direccion on id_direccion = direccion.id order by dias')
+    cur.execute('SELECT *,datediff(CURRENT_DATE, fecha) as dias,CURRENT_DATE FROM busqueda join direccion on id_direccion = direccion.id order by dias')
     data = cur.fetchall()
-    return render_template('gridjobs.html', busqueda = data)
+    cur.execute('SELECT direccion.id,direccion.direccion as dia FROM busqueda join direccion on busqueda.id_direccion = direccion.id where busqueda.fecha <= CURRENT_DATE group by direccion.id order by direccion.id')
+    direc = cur.fetchall()
+    return render_template('gridjobs.html', busqueda = data, direcccio = direc)
+
 
 # pantalla vista de un puesto cargado
 @app.route('/viewjob/<string:id>')
@@ -178,7 +177,7 @@ def nuevopuesto():
     if session['rol'] == 1:
         cur.execute('SELECT *,CURRENT_DATE as dia FROM direccion')
         direc = cur.fetchall()
-        cur.execute('SELECT *,CURRENT_DATE as hoy FROM busqueda join direccion on id_direccion = direccion.id')
+        cur.execute('SELECT *,CURRENT_DATE as dia, DATE_ADD(CURRENT_DATE,INTERVAL 30 DAY) as mastreinta FROM busqueda join direccion on id_direccion = direccion.id')
         data = cur.fetchall()
         return render_template('nuevopuesto.html', busqueda = data, direcccio = direc )
     else:
@@ -196,7 +195,7 @@ def editjobs(id):
     if session['rol'] == 1:
         cur.execute('SELECT *,CURRENT_DATE as dia FROM direccion')
         direc = cur.fetchall()
-        cur.execute('SELECT *,CURRENT_DATE as dia FROM busqueda join direccion on id_direccion = direccion.id WHERE busqueda.id = {0}'.format(id))
+        cur.execute('SELECT *,CURRENT_DATE as dia, DATE_ADD(CURRENT_DATE,INTERVAL 30 DAY) as mastreinta FROM busqueda join direccion on id_direccion = direccion.id WHERE busqueda.id = {0}'.format(id))
         data = cur.fetchall()
         return render_template('editjobs.html', busqueda = data[0], direcccio = direc)
     else:
@@ -233,7 +232,7 @@ def updatejobs(id):
         """, (id_direccion, puesto, fecha, vacantes, alcance, tareas, contacto, id))
         mysql.connection.commit()
         flash('Puesto actualizado correctamente')
-        return redirect(url_for('gridjobs'))
+        return redirect(url_for('mygridjobs'))
 
 # post nuevo puesto
 @app.route('/addnuevopuesto', methods= ['POST'])
@@ -258,9 +257,33 @@ def addnuevopuesto():
             (id_direccion, puesto, fecha, vacantes, alcance, tareas, contacto))
             mysql.connection.commit()
             flash('Puesto agregado correctamente')
-            return redirect(url_for('gridjobs'))
+            return redirect(url_for('mygridjobs'))
     else:
         return render_template('home.html')   
+
+
+# post nuevo puesto
+@app.route('/mostrargrilla', methods= ['POST'])
+def mostrargrilla():
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    if request.form['iddireccion'] == '1':
+        cur.execute('SELECT *,datediff(CURRENT_DATE, fecha) as dias,CURRENT_DATE FROM busqueda join direccion on id_direccion = direccion.id order by dias')
+        data = cur.fetchall()
+    else:
+        filtrodireccion = str(request.form['iddireccion'][:2])
+        cur.execute('SELECT *,datediff(CURRENT_DATE, fecha) as dias,CURRENT_DATE FROM busqueda join direccion on id_direccion = direccion.id where busqueda.id_direccion = %s order by dias', [filtrodireccion])
+        data = cur.fetchall()
+    cur.execute('SELECT direccion.id,direccion.direccion as dia FROM busqueda join direccion on busqueda.id_direccion = direccion.id where busqueda.fecha <= CURRENT_DATE group by direccion.id order by direccion.id')
+    direc = cur.fetchall()
+    return render_template('gridjobs.html', busqueda = data, direcccio = direc)
+    
+
+
 
 # post nuevo cv
 @app.route('/add_cv', methods= ['POST'])
@@ -329,13 +352,10 @@ def delete_cv(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html')
-    if session['rol'] == 1:
-        cur.execute('DELETE FROM cv WHERE id = {0}'.format(id))
-        mysql.connection.commit()
-        flash('Contact Removed Successfully')
-        return redirect(url_for('gridcv'))
-    else:
-        return render_template('home.html')
+    cur.execute('DELETE FROM cv WHERE id = {0}'.format(id))
+    mysql.connection.commit()
+    flash('Contact Removed Successfully')
+    return redirect(url_for('gridcv'))
 
 # borrado de puesto           
 @app.route('/deletejobs/<string:id>')
@@ -354,6 +374,48 @@ def deletejobs(id):
         return redirect(url_for('gridjobs'))
     else:
         return render_template('home.html')
+
+# post nueva postulacion
+@app.route('/postular', methods= ['GET','POST'])
+def postular():
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    if request.method == 'POST':
+        id_usuario = request.form['idusuario']
+        id_busqueda = request.form['idbusqueda']
+        fechapostulacion = date()
+        cur = mysql.connection.cursor()
+        cur.execute('INSERT INTO cv (id_usuario, id_busqueda, fechapostulacion) VALUES (%s, %s, %s)',
+        (id_usuario, id_busqueda, fechapostulacion))
+        mysql.connection.commit()
+        flash('Postulacion correcta')
+        return redirect(url_for('gridjob'))
+
+
+# pantalla puestos cargados
+@app.route('/mygridjobs')
+def mygridjobs():
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    cur.execute('SELECT *,datediff(CURRENT_DATE, fecha) as dias,CURRENT_DATE FROM busqueda join direccion on id_direccion = direccion.id where busqueda.id_usuario = %s order by dias', [session['id']] )
+    data = cur.fetchall()
+    a = len(data)
+    if data:
+        return render_template('mygridjobs.html', busqueda = data, cantregistros = a)
+    else:
+        return render_template('home.html')
+   
+    
+
+
 # logoaut
 @app.route('/logout')
 def logout():

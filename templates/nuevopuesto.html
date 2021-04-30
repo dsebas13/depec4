@@ -49,8 +49,8 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="fecha">Fecha:</label>
-                                <input type="date" id="start" name="fecha" min="1950-01-01"
-                                max="2021-04-14" class="form-control">
+                                <input type="date" id="start" name="fecha" class="form-control" 
+                                value="{{ busqueda.5.12 }}" min="{{ busqueda.5.12 }}" max="{{ busqueda.5.13 }}">
                             </div>
                             <div class="col-sm-4" >
                                 <label for="vacantes"></label>Cantidad de vacantes *</label>
@@ -89,7 +89,7 @@
                     <button type="submit" class="btn btn-primary" rigth style="float: right">
                         Crear Puesto
                     </button>
-                    <a href="{{url_for('gridjobs')}}" class="btn btn-danger">Regresar</a>
+                    <a href="{{url_for('mygridjobs')}}" class="btn btn-danger">Regresar</a>
                 </div>
             </div>
 

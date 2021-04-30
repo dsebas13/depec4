@@ -2,108 +2,116 @@
 
 
 {% block body %}
+<div class="position-fixed" style="right: 200px;">
 
-<div class="row small">
-  <div class="col md-5">
-    
-    <div class="container">
-      
-      <div class="card text-black bg-white mb-2" style="display: block;">
+  <a href="/postular" class="btn btn-success" rigth style="float: right">Postulate</a>
 
-        <div class="card-body">
-          <h4 class="card-title">{{ busqueda.0 }} | {{busqueda.2}}</h4>
-          <p class="card-text"> {{ busqueda.9 }} </p>
-          <p class="card-text"> Busqueda Interna | Cod: {{ busqueda.0 }} | Vacantes: {{ busqueda.4 }} </p>
+</div>
+<form action="/postular" method="POST">
+  <div class="container">
+    <div class="row small">
+      <div class="col md-5">
 
+        <div class="container">
+
+          <div class="card text-black bg-white mb-2" style="display: block;">
+
+            <div class="card-body">
+              <button type="submit" class="btn btn-primary" rigth style="float: right">
+                Postulate
+              </button>
+              <h4 class="card-title">{{ busqueda.0 }} | {{busqueda.2}}</h4>
+              <p class="card-text"> {{ busqueda.10 }} </p>
+              <p class="card-text"> Busqueda Interna | Cod: {{ busqueda.0 }} | Vacantes: {{ busqueda.4 }} </p>
+
+            </div>
+
+          </div>
         </div>
-        
       </div>
     </div>
-  </div>
-</div>
 
-<div class="row">
-  <div class="col md-5">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-          <h5>Alta de vacante:</h5>
-        </div>
-      </div>
-      <br>
-      <div class="card card-body">
-        <div class="box-container container">
-          </p>
+    <div class="row">
+      <div class="col md-5">
+        <div class="container">
           <div class="row">
             <div class="col-sm-12">
-              <h5>Datos de la vacante
-                <small class="pull-right" rigth style="float: right">
-                  <span class="text-danger">*</span>
-                  &nbsp; Campos Obligatorios &nbsp; &nbsp;
-                </small>
-              </h5>
+              <h5>Alta de vacante:</h5>
             </div>
           </div>
-          </p>
-          <div class="row">
-            <div class="col-sm-4">
-              <label for="direccion"></label>Dirección *</label>
-              <label name="direccion" required class="form-control"> {{busqueda.9}} </label>
-            </div>
-            &nbsp; &nbsp; &nbsp;
-            <div class="col-sm-4">
-              <label for="puesto"></label>Puesto *</label>
-              <label name="direccion" required class="form-control"> {{busqueda.2}} </label>
-            </div>
-          </div>
-          </br>
-          </br>
-          <div class="row">
-            <div class="col-sm-4">
-              <label for="fecha">Fecha:</label>
-              <label name="direccion" required class="form-control"> {{busqueda.3}} </label>
-            </div>
-            <div class="col-sm-4">
-              <label for="vacantes"></label>Cantidad de vacantes *</label>
-              <label name="direccion" required class="form-control"> {{busqueda.4}} </label>
-            </div>
-          </div>
-          </br>
-          </br>
-          <div class="row">
-            <div class="col-sm-4">
-              <label for="alcance"></label>Alcance *</label>
-              <label name="direccion" required class="form-control"> {{busqueda.5}} </label>
-            </div>
-            <div class="col-sm-4">
-              <label for="tareas"></label>Tareas *</label>
-              <label name="direccion" required class="form-control"> {{busqueda.6}} </label>
-            </div>
-          </div>
+          <br>
+          <div class="card card-body">
+            <div class="box-container container">
+              </p>
+              <div class="row">
+                <div class="col-sm-12">
+                  <h5>Datos de la vacante</h5>
+                </div>
+              </div>
+              </p>
+              <div class="row">
+                <div class="col-sm-4">
+                  <label for="direccion"></label>Dirección *</label>
+                  <label name="direccion" required class="form-control"> {{busqueda.10}} </label>
+                </div>
+                &nbsp; &nbsp; &nbsp;
+                <div class="col-sm-4">
+                  <label for="puesto"></label>Puesto *</label>
+                  <label name="direccion" required class="form-control"> {{busqueda.2}} </label>
+                </div>
+              </div>
+              </br>
+              </br>
+              <div class="row">
+                <div class="col-sm-4">
+                  <label for="idbusqueda">id_busqueda:</label>
+                  <label name="idbusqueda" required class="form-control"> {{busqueda.0}} </label>
+                </div>
+                <div class="col-sbusquedam-4">
+                  <label for="idusuario">id_usuario:</label>
+                  <label name="idusuario" required class="form-control"> {{session['id']}} </label>
+                </div>
+                <div class="col-sm-4">
+                  <label for="fecha">Fecha:</label>
+                  <label name="direccion" required class="form-control"> {{busqueda.3}} </label>
+                </div>
+                <div class="col-sm-4">
+                  <label for="vacantes"></label>Cantidad de vacantes *</label>
+                  <label name="direccion" required class="form-control"> {{busqueda.4}} </label>
+                </div>
+              </div>
+              </br>
+              </br>
+              <div class="row">
+                <div class="col-sm-4">
+                  <label for="alcance"></label>Alcance *</label>
+                  <label name="direccion" required class="form-control"> {{busqueda.5}} </label>
+                </div>
+                <div class="col-sm-4">
+                  <label for="tareas"></label>Tareas *</label>
+                  <label name="direccion" required class="form-control"> {{busqueda.6}} </label>
+                </div>
+              </div>
 
-          </br>
-          </br>
-          <div class="col-sm-4">
-            <label for="contacto">Contacto</label>
-            <label name="direccion" required class="form-control"> {{busqueda.7}} </label>
+              </br>
+              </br>
+              <div class="col-sm-4">
+                <label for="contacto">Contacto</label>
+                <label name="direccion" required class="form-control"> {{busqueda.7}} </label>
+              </div>
+            </div>
           </div>
+        </div>
+        <br>
+        <br>
+        <div class="form group">
+          <a href="{{url_for('gridjobs')}}" class="btn btn-danger">Regresar</a>
         </div>
       </div>
     </div>
-    <br>
-    <br>
-    <div class="form group">
-      {% if session['rol'] == 1 %}
-      <button type="submit" class="btn btn-primary" rigth style="float: right">
-        Crear Puesto
-      </button>
-      {% endif %}
-      <a href="{{url_for('gridjobs')}}" class="btn btn-danger">Regresar</a>
-    </div>
   </div>
-</div>
-</div>
-
+  </div>
+</form>
 
 
 

@@ -31,7 +31,7 @@
                             <div class="col-sm-4">
                                 <label for="iddireccion"></label>Dirección *</label>
                                 <select name="iddireccion" id="iddireccion"  required class="selectpicker form-control">
-                                    <option selected="selected" class="d-none">{{ busqueda.8 }} - {{ busqueda.9 }}</option>
+                                    <option selected="selected" class="d-none">{{ busqueda.9 }} - {{ busqueda.10 }}</option>
                                     {% for d in direcccio %}
                                     <option value="{{ d.0 }}">{{ d.0 }} - {{ d.1 }}</option>
                                     {% endfor %}    
@@ -49,7 +49,8 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="fecha">Fecha:</label>
-                                <input type="date" id="start" name="fecha" max="{{ busqueda.8 }}" value="{{ busqueda.3 }}" class="form-control">
+                                <input type="date" id="start" name="fecha"
+                                max="{{ busqueda.12 }}" min="{{ busqueda.11 }}"  value="{{ busqueda.3 }}" class="form-control">
                             </div>
                             <div class="col-sm-4" >
                                 <label for="vacantes"></label>Cantidad de vacantes *</label>
@@ -88,7 +89,7 @@
                     <button type="submit" class="btn btn-primary" rigth style="float: right">
                         Actualizar datos
                     </button>
-                    <a href="{{url_for('gridjobs')}}" class="btn btn-danger">Regresar</a>
+                    <a href="{{url_for('mygridjobs')}}" class="btn btn-danger">Regresar</a>
                 </div>
             </div>
 
@@ -97,9 +98,6 @@
         </form>
     </div>
 </div>
-
-
-
 
 
 {% endblock %}
