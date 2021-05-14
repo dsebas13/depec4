@@ -4,48 +4,43 @@
 
 
 <div class="row">
-    <div class="col md-5">
-        <form action="/mostrargrilla" method="POST">
-            <div class="container">
-                <br>
-                <div class="card card-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <h5>Busqueda
-                            </h5>
-                        </div>
+    <div class="col md-7">
+        <form action="/gridjobs" method="POST">
+            <div class="card text-black bg-white mb-2" style="display: block;" data-toggle="collapse">
+                <div class="card-body">
+
+                    <div class="col-sm-4">
+
+                        <label for="iddireccion"></label>Dirección *</label>
+                        <select name="iddireccion" id="iddireccion" class="selectpicker form-control">
+                            <option value="1">Todas</option>
+                            {% for d in direcccio %}
+                            <option value="{{ d.0 }}">{{ d.0 }} - {{ d.1 }}</option>
+                            {% endfor %}
+                        </select>
+
                     </div>
-                    </p>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label for="iddireccion"></label>Dirección *</label>
-                            <select name="iddireccion" id="iddireccion" class="selectpicker form-control">
-                                <option value="1">Todas</option>
-                                {% for d in direcccio %}
-                                <option value="{{ d.0 }}">{{ d.0 }} - {{ d.1 }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    </br>
-                    </br>
                     <button type="submit" class="btn btn-primary" rigth style="float: right">
                         Buscar
                     </button>
                 </div>
+
+                </br>
+                </br>
+
             </div>
         </form>
         <br>
         {% for b in busqueda %}
-        {% if b.3 <= b.13 %}
+        {% if b.3 <= b.14 %}
         <div class="card text-black bg-white mb-2" style="display: block;">
 
             <div class="card-body">
                 <h4 class="card-title">{{ b.0 }} | {{b.2}}</h4>
-                <p class="card-text"> {{ b.10 }} </p>
+                <p class="card-text"> {{ b.11 }} </p>
                 <p class="card-text"> Busqueda Interna | Cod: {{ b.0 }} | Vacantes: {{ b.4 }} </p>
                 <a href="/viewjob/{{b.0}}" class="btn btn-success btn-sm">Ver</a>
-                <button type="button" class="btn btn-primary btn-sm">Dias: {{ b.12 }} </button>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Dias de publicada la busqueda">Dias: {{ b.13 }} </button>
                 {% if session['rol'] == 1 %}
                 <!-- <a href="/deletejobs/{{b.0}}" class="btn btn-warning btn-sm btn-delete" rigth style="float: right">Eliminar</a>
                 <a href="/editjobs/{{b.0}}" class="btn btn-info btn-sm" rigth style="float: right">Editar</a> -->

@@ -3,13 +3,8 @@
 {% block body %}
 {% if session['rol'] == 1 %}
 <div class="position-fixed" style="left: 100px;">
-    <h2 class="position-fixed" style="margin-top: -10px;">Mi Cartelera tiene {{cantregistros.0}} registros</h2>
+    <h2 class="position-fixed" style="margin-top: -10px;">Mis Postulaciones</h2>
     <!-- <a href="/nuevopuesto" class="btn btn-primary" rigth style="float: right">Nuevo</a> -->
-
-</div>
-<div class="position-fixed" style="right: 200px;">
-    
-    <a href="/nuevopuesto" class="btn btn-primary" rigth style="float: right">Nuevo</a>
 
 </div>
 {% endif %}
@@ -37,27 +32,18 @@
         <div class="card text-black bg-white mb-2" style="display: block;">
             
             <div class="card-body">
-                <h4 class="card-title">{{ b.0 }} | {{b.2}}</h4>
-                <p class="card-text"> {{ b.11 }} </p>
-                <p class="card-text"> Busqueda Interna | Cod: {{ b.0 }} | Vacantes: {{ b.4 }} </p>
-                <a href="/viewjob/{{b.0}}" class="btn btn-success btn-sm">Ver</a>
-                <button type="button" class="btn btn-primary btn-sm">Dias: {{ b.13 }} </button>
-                {% if session['rol'] == 1 %}
-                <a href="/deletejobs/{{b.0}}" class="btn btn-warning btn-sm btn-delete" rigth style="float: right">Eliminar</a>
-                <a href="/editjobs/{{b.0}}" class="btn btn-info btn-sm" rigth style="float: right">Editar</a>
-                {% endif %}
+                <h4 class="card-title">{{ b.2 }} | {{b.7}}</h4>
+                <p class="card-text"> {{ b.16 }} </p>
+                <p class="card-text"> Busqueda Interna | Cod: {{ b.2 }} | Vacantes: {{ b.9 }} </p>
+                <a href="/viewjob/{{b.2}}" class="btn btn-success btn-sm">Ver</a>
+                <button type="button" class="btn btn-primary btn-sm">Dias: {{ b.15 }} </button>
+                <a href="/deletejobs/{{b.0}}" class="btn btn-warning btn-sm btn-delete" rigth style="float: right">Eliminar postulación</a>                
             </div>
         </div>
         
         {% endfor %}
     </div>
 </div>
-
-
-
-
-
-
 
 
 {% endblock %}

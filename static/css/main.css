@@ -32,6 +32,12 @@ background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9); /* W3C, IE 10+
     top: -50px;
     left: calc(50% - 50px);
   }
+
+  .avatar2 {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+  }
   
   .login-box h1 {
     margin: 0;
@@ -94,7 +100,7 @@ background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9); /* W3C, IE 10+
   }
 
   footer{
-    text-align: center;
+    text-align: right;
     height: 3vh;
     width: 100vw;
     display: flex;
@@ -104,3 +110,15 @@ background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9); /* W3C, IE 10+
     position: fixed;
     bottom: 0;
   }
+
+
+  .footer2{
+
+    height: 2vh;
+    width: 100vw;
+    display: flex;
+    z-index: 10;
+    position: fixed;
+    bottom: 0;
+  }
+
