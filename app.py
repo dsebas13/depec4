@@ -6,6 +6,7 @@ import PyPDF2
 import fitz
 import os
 from os import remove
+from base64 import b64decode
 
 
 #mySql conection
@@ -101,19 +102,23 @@ def Index():
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html')
-    cur.execute('SELECT direccion.IdDireccion,direccion.nombre FROM direccion group by direccion.IdDireccion order by direccion.IdDireccion')
-    direc = cur.fetchall()
-    cur.execute('SELECT *,DATE_ADD(fechaNacimiento,INTERVAL 18 YEAR) as mayoredad,CURRENT_DATE as hoy FROM usuario join direccion on usuario.IdUsuario=direccion.IdDireccion WHERE dni = %s', [session['dni']])
-    data = cur.fetchone()
-    cur.execute('SELECT * FROM atributo group by atributo order by atributo')
-    atrib = cur.fetchall()
-    cur.execute('SELECT * FROM nivel order by IdNivel')
-    level = cur.fetchall()
-    print(data)
-    if data:
-        return render_template('index.html', cv = data, direcccio = direc, atrib = atrib, level = level) 
+    cur.execute('SELECT * FROM cv where IdUsuario = %s', [session['id']])
+    tienecv = cur.fetchone()
+    if tienecv:
+        return render_template('home.html', session = session)
     else:
-        return render_template('home.html', cv = data, session = session)
+        cur.execute('SELECT direccion.IdDireccion,direccion.nombre FROM direccion group by direccion.IdDireccion order by direccion.IdDireccion')
+        direc = cur.fetchall()
+        cur.execute('SELECT *,DATE_ADD(fechaNacimiento,INTERVAL 18 YEAR) as mayoredad,CURRENT_DATE as hoy FROM usuario join direccion on usuario.IdUsuario=direccion.IdDireccion WHERE dni = %s', [session['dni']])
+        data = cur.fetchone()
+        cur.execute('SELECT * FROM atributo group by atributo order by atributo')
+        atrib = cur.fetchall()
+        cur.execute('SELECT * FROM nivel order by IdNivel')
+        level = cur.fetchall()
+        if data:
+            return render_template('index.html', cv = data, direcccio = direc, atrib = atrib, level = level) 
+        else:
+            return render_template('home.html', cv = data, session = session)
 
 # pantalla grilla cvs cargados
 @app.route('/gridcv')
@@ -141,8 +146,33 @@ def get_cv(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
+    ###datos ingresados por el usuario en tabla cv
     cur.execute('SELECT * FROM cv join usuario on cv.IdUsuario = usuario.IdUsuario WHERE cv.IdCV = {0}'.format(id))
-    data = cur.fetchall()
+    cvuser = cur.fetchone()
+    b64 = cvuser[5]
+    bytes = b64decode(b64, validate=True)
+
+# Perform a basic validation to make sure that the result is a valid PDF file
+# Be aware! The magic number (file signature) is not 100% reliable solution to validate PDF files
+# Moreover, if you get Base64 from an untrusted source, you must sanitize the PDF contents
+    # Write the PDF contents to a local file
+    f = open('./templates/file.pdf', 'wb')
+    f.write(bytes)
+    f.close()
+
+
+    cur.execute('SELECT * FROM cvatributo join nivel on cvatributo.IdNivel = nivel.IdNivel WHERE cvatributo.IdCV = {0}'.format(id))
+    atribuser = cur.fetchall()
+    cur.execute('SELECT direccion.IdDireccion,direccion.nombre FROM direccion group by direccion.IdDireccion order by direccion.IdDireccion')
+    direc = cur.fetchall()
+    cur.execute('SELECT *,DATE_ADD(fechaNacimiento,INTERVAL 18 YEAR) as mayoredad,CURRENT_DATE as hoy FROM usuario join direccion on usuario.IdUsuario=direccion.IdDireccion WHERE dni = %s', [session['dni']])
+    data = cur.fetchone()
+    cur.execute('SELECT * FROM atributo group by atributo order by atributo')
+    atrib = cur.fetchall()
+    cur.execute('SELECT * FROM nivel order by IdNivel')
+    level = cur.fetchall()
+
+
     return render_template('edit-cv.html', cv = data[0])
 
 
@@ -308,7 +338,6 @@ def add_cv():
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
-    print(request.form)
     if request.method == 'POST':
         f = request.files['archivo']
         # Guardamos el archivo en el directorio "Archivos PDF"
@@ -379,8 +408,7 @@ def add_cv():
                         (IdDireccion, FechaDesde, FechaHasta, Puesto, Tarea, IdCV))
                         mysql.connection.commit()
 
-        if ('formcheck' in request.form): 
-            print('entrocheck')    
+        if ('formcheck' in request.form):   
             for f in request.form.getlist('formcheck'):
                 IdCV = idCVs
                 IdAtributo = f
@@ -595,8 +623,106 @@ def mygridjobs():
     else:
         return render_template('home.html')
    
-    
+#abm atributos
+@app.route('/atributo/<string:id>')
+def atributo(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html')
+    cur.execute('SELECT *,ROW_NUMBER() OVER (ORDER BY atributo) AS Nro FROM atributo WHERE tipoAtributo = %s group by atributo', [id])
+    data = cur.fetchall()
+    if id == 'I':
+        dato = 'Idioma'
+    if id == 'T':
+        dato = 'Conocimientos Técnicos'
+    if id == 'A':
+        dato = 'Caracteristica Personales'
+    if id == 'E':
+        dato = 'Estudios Academicos'
+    if data:
+        return render_template('atributo.html', cv = data, dato = dato)
+    else:
+        return render_template('home.html')
 
+@app.route('/add_atributo/<string:id>', methods= ['POST'])
+def add_atributo(id):
+    print(id)
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html')
+    print(request.form)
+    if request.method == 'POST':
+        atributo = request.form['idioma']
+        tipoAtributo = id
+        fechaCreacion = datetime.now()
+        IdUsuarioCreacion = session['id']
+        cur.execute('SELECT * FROM atributo WHERE atributo = %s', [atributo])
+        data = cur.fetchone()
+        if data:
+            flash('Idioma ya existente')
+            return redirect(url_for('atributo', id = id))
+        cur.execute('INSERT INTO atributo (atributo, tipoAtributo, fechaCreacion, IdUsuarioCreacion) VALUES (%s, %s, %s, %s)',
+        (atributo, tipoAtributo, fechaCreacion, IdUsuarioCreacion))
+        mysql.connection.commit()
+        flash('Operacion realizada correctamente')
+        return redirect(url_for('atributo', id = id))
+
+@app.route('/edit_atributo/<string:id>', methods= ['POST'])
+def edit_atributo(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    print(id)
+    print(request.form)
+    if request.method == 'POST':
+        atributo = request.form['atribNew']
+        fechaCreacion = datetime.now()
+        IdUsuarioCreacion = session['id']
+        atribOld = request.form['atribOld']
+        cur.execute("""
+            UPDATE atributo 
+            SET atributo = %s,
+                fechaCreacion = %s,
+                IdUsuarioCreacion = %s
+            WHERE atributo = %s
+        """, (atributo, fechaCreacion, IdUsuarioCreacion, atribOld))
+        mysql.connection.commit()
+        flash('Operacion realizada correctamente')
+        return redirect(url_for('atributo', id = id))
+
+# borrado de atributo           
+@app.route('/deleteatributo/<string:id>', methods = ['POST'])
+def deleteatributo(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    print(request.form)
+    if session['rol'] == 1:
+        cur = mysql.connection.cursor()
+        idatrib = request.form['idatrib']
+        cur.execute('SELECT * FROM cvatributo WHERE IdAtributo = %s', [idatrib])
+        data = cur.fetchall()
+        if data:
+            flash('Atributo asignado a uno o mas usuarios, no se puede eliminar')
+            return redirect(url_for('atributo', id = id))
+        cur.execute('DELETE FROM atributo WHERE IdAtributo = %s', [idatrib])
+        mysql.connection.commit()
+        flash('Atributo eliminado exitosamente')
+        return redirect(url_for('atributo', id = id))
+    else:
+        return render_template('home.html')
 
 # logoaut
 @app.route('/logout')
