@@ -412,7 +412,6 @@ def add_cv():
             for f in request.form.getlist('formcheck'):
                 IdCV = idCVs
                 IdAtributo = f
-
                 cur = mysql.connection.cursor()
                 cur.execute('INSERT INTO cvatributo (IdCV, IdAtributo) VALUES (%s, %s)',
                 (IdCV, IdAtributo))
@@ -656,7 +655,6 @@ def add_atributo(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html')
-    print(request.form)
     if request.method == 'POST':
         atributo = request.form['idioma']
         tipoAtributo = id
@@ -723,6 +721,369 @@ def deleteatributo(id):
         return redirect(url_for('atributo', id = id))
     else:
         return render_template('home.html')
+
+# pantalla perfiles cargados
+@app.route('/perfil')
+def perfil():
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    cur.execute('SELECT * FROM perfil')
+    data = cur.fetchall()
+    print(data)
+    if data:
+        return render_template('perfil.html', perfil = data)
+    else:
+        flash('No se han creado perfiles')
+        return render_template('perfil.html')
+
+@app.route('/editperfil/<string:id>')
+def editperfil(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html')
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel, idPerfilatributo, perfil_atributo.IdPerfil FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s', [id])
+    data = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "I" ', [id])
+    dataI = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "E" ', [id])
+    dataE = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo left join perfil_atributo on perfil_atributo.IdAtributo = atributo.IdAtributo WHERE (perfil_atributo.IdPerfil = %s or perfil_atributo.IdPerfil is NULL) and atributo.tipoAtributo = "A" ', [id])
+    dataA = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo left join perfil_atributo on perfil_atributo.IdAtributo = atributo.IdAtributo WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "A" ', [id])
+    dataAsi = cur.fetchall()
+    cur.execute('SELECT atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo WHERE atributo.tipoAtributo = "A" ')
+    dataTODO = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "T" ', [id])
+    dataT = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo WHERE perfil_atributo.IdPerfil = %s', [id])
+    dato = cur.fetchall()
+    cur.execute('SELECT * FROM atributo group by atributo order by atributo')
+    atrib = cur.fetchall()
+    cur.execute('SELECT * FROM nivel order by IdNivel')
+    level = cur.fetchall()
+    print(dataA)
+    return render_template('editperfil.html', perfil = data, dataAsi= dataAsi, dataTODO= dataTODO , dato = dato, dataI = dataI ,dataE = dataE, dataT = dataT ,dataA = dataA,  level = level, atrib = atrib)
+
+@app.route('/nuevoperfil')
+def nuevoperfil():
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html')
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel, idPerfilatributo, perfil_atributo.IdPerfil FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s', [id])
+    data = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "I" ', [id])
+    dataI = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "E" ', [id])
+    dataE = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo left join perfil_atributo on perfil_atributo.IdAtributo = atributo.IdAtributo WHERE (perfil_atributo.IdPerfil = %s or perfil_atributo.IdPerfil is NULL) and atributo.tipoAtributo = "A" ', [id])
+    dataA = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo left join perfil_atributo on perfil_atributo.IdAtributo = atributo.IdAtributo WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "A" ', [id])
+    dataAsi = cur.fetchall()
+    cur.execute('SELECT atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo WHERE atributo.tipoAtributo = "A" ')
+    dataTODO = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "T" ', [id])
+    dataT = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo WHERE perfil_atributo.IdPerfil = %s', [id])
+    dato = cur.fetchall()
+    cur.execute('SELECT * FROM atributo group by atributo order by atributo')
+    atrib = cur.fetchall()
+    cur.execute('SELECT * FROM nivel order by IdNivel')
+    level = cur.fetchall()
+    print(dataA)
+    return render_template('nuevoperfil.html', perfil = data, dataAsi= dataAsi, dataTODO= dataTODO , dato = dato, dataI = dataI ,dataE = dataE, dataT = dataT ,dataA = dataA,  level = level, atrib = atrib)
+
+
+@app.route('/updatePerfil/<string:id>', methods = ['POST'])
+def updatePerfil(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    if request.method == 'POST':
+        print(request.form)
+
+        c = 0
+        for c in range(3):
+            if c == 0:
+                IdAtributo = request.form['estudios'][:2]
+                IdEstado = request.form['estado']
+                atribOld = request.form['atribOld']
+            else:
+                IdAtributo = request.form['estudios' + str(c)][:2]
+                IdEstado = request.form['estado'+ str(c)]
+                atribOld = request.form['atribOld'+ str(c)]
+            IdUsuarioCreacion = session['id']
+            fechaCreacion = datetime.now()
+            cur = mysql.connection.cursor() 
+            if atribOld == '0':  ### sino tiene nada cargado previo
+                if IdAtributo == "":   ### sino cargo atributo
+                    pass   ### sin atrib anterior y  idatrib = "" no hacer nada
+                else:
+                    ### sin previo y con un atrib ingresado - nuevo atributo
+                    cur.execute('INSERT INTO perfil_atributo (IdPerfil, IdAtributo, IdNivel, IdUsuarioCreacion, fechaCreacion) VALUES (%s, %s, %s, %s, %s)',
+                (id, IdAtributo, IdEstado, IdUsuarioCreacion, fechaCreacion))
+                    mysql.connection.commit()
+            else:   ### tiene algo cargado previamente
+                if IdAtributo == "":   ### sino cargo atributo
+                    ### con atrib anterior y idatributo == "" el usuario eliminimo ese atributo
+                    cur.execute('DELETE FROM perfil_atributo WHERE IdPerfil = %s and IdAtributo = %s', [id,atribOld])
+                    mysql.connection.commit()
+                else:  ### con anterior y atributo cargado update   
+                    cur.execute("""
+                        UPDATE perfil_atributo
+                        SET IdAtributo = %s,
+                            IdNivel = %s,
+                            IdUsuarioCreacion = %s,
+                            fechaCreacion = %s
+                        WHERE IdPerfil = %s and IdAtributo = %s
+                    """,  (IdAtributo, IdEstado, IdUsuarioCreacion, fechaCreacion, id, atribOld))
+                    mysql.connection.commit()
+            c = c + 1
+                    
+        c = 0
+        for c in range(3):
+            if c == 0:
+                IdAtributo = request.form['idioma'][:2]
+                IdEstado = request.form['nivel']
+                atribOld = request.form['atribOldI']
+            else:
+                IdAtributo = request.form['idioma' + str(c)][:2]
+                IdEstado = request.form['nivel'+ str(c)]
+                atribOld = request.form['atribOldI'+ str(c)]
+            IdUsuarioCreacion = session['id']
+            fechaCreacion = datetime.now()
+            cur = mysql.connection.cursor() 
+            if atribOld == '0':  ### sino tiene nada cargado previo
+                if IdAtributo == "":   ### sino cargo atributo
+                    pass   ### sin atrib anterior y  idatrib = "" no hacer nada
+                else:
+                    ### sin previo y con un atrib ingresado - nuevo atributo
+                    cur.execute('INSERT INTO perfil_atributo (IdPerfil, IdAtributo, IdNivel, IdUsuarioCreacion, fechaCreacion) VALUES (%s, %s, %s, %s, %s)',
+                (id, IdAtributo, IdEstado, IdUsuarioCreacion, fechaCreacion))
+                    mysql.connection.commit()
+            else:   ### tiene algo cargado previamente
+                if IdAtributo == "":   ### sino cargo atributo
+                    ### con atrib anterior y idatributo == "" el usuario eliminimo ese atributo
+                    cur.execute('DELETE FROM perfil_atributo WHERE IdPerfil = %s and IdAtributo = %s', [id,atribOld])
+                    mysql.connection.commit()
+                else:  ### con anterior y atributo cargado update   
+                    cur.execute("""
+                        UPDATE perfil_atributo
+                        SET IdAtributo = %s,
+                            IdNivel = %s,
+                            IdUsuarioCreacion = %s,
+                            fechaCreacion = %s
+                        WHERE IdPerfil = %s and IdAtributo = %s
+                    """,  (IdAtributo, IdEstado, IdUsuarioCreacion, fechaCreacion, id, atribOld))
+                    mysql.connection.commit()
+            c = c + 1
+
+        c = 0
+        for c in range(3):
+            if c == 0:
+                IdAtributo = request.form['Herramientas'][:2]
+                IdEstado = request.form['niveltecnico']
+                atribOld = request.form['atribOldT']
+            else:
+                IdAtributo = request.form['Herramientas' + str(c)][:2]
+                IdEstado = request.form['niveltecnico'+ str(c)]
+                atribOld = request.form['atribOldT'+ str(c)]
+            IdUsuarioCreacion = session['id']
+            fechaCreacion = datetime.now()
+            cur = mysql.connection.cursor() 
+            if atribOld == '0':  ### sino tiene nada cargado previo
+                if IdAtributo == "":   ### sino cargo atributo
+                    pass   ### sin atrib anterior y  idatrib = "" no hacer nada
+                else:
+                    ### sin previo y con un atrib ingresado - nuevo atributo
+                    cur.execute('INSERT INTO perfil_atributo (IdPerfil, IdAtributo, IdNivel, IdUsuarioCreacion, fechaCreacion) VALUES (%s, %s, %s, %s, %s)',
+                (id, IdAtributo, IdEstado, IdUsuarioCreacion, fechaCreacion))
+                    mysql.connection.commit()
+            else:   ### tiene algo cargado previamente
+                if IdAtributo == "":   ### sino cargo atributo
+                    ### con atrib anterior y idatributo == "" el usuario eliminimo ese atributo
+                    cur.execute('DELETE FROM perfil_atributo WHERE IdPerfil = %s and IdAtributo = %s', [id,atribOld])
+                    mysql.connection.commit()
+                else:  ### con anterior y atributo cargado update   
+                    cur.execute("""
+                        UPDATE perfil_atributo
+                        SET IdAtributo = %s,
+                            IdNivel = %s,
+                            IdUsuarioCreacion = %s,
+                            fechaCreacion = %s
+                        WHERE IdPerfil = %s and IdAtributo = %s
+                    """,  (IdAtributo, IdEstado, IdUsuarioCreacion, fechaCreacion, id, atribOld))
+                    mysql.connection.commit()
+            c = c + 1
+            
+        descripcion = request.form['descripcion']
+        olddescripcion = request.form['olddescripcion']
+        if olddescripcion != descripcion:
+            print('entroperfil')
+            IdUsuarioCreacion = session['id']
+            fechaCreacion = datetime.now()
+            cur.execute("""
+                UPDATE perfil
+                SET descripcion = %s,
+                    IdUsuarioCreacion = %s,
+                    fechaCreacion = %s
+                WHERE IdPerfil = %s
+            """,  (descripcion, IdUsuarioCreacion, fechaCreacion, id))
+            mysql.connection.commit()
+
+        if ('formcheck' in request.form):
+            for f in request.form.getlist('formcheck'):
+                IdAtributo = f
+                IdUsuarioCreacion = session['id']
+                fechaCreacion = datetime.now()
+                print(IdAtributo)
+                cur.execute('SELECT IdAtributo from perfil_atributo WHERE IdAtributo = %s and IdPerfil = %s' , [IdAtributo, id])
+                datcheck = cur.fetchone()
+                print(datcheck)
+                if datcheck:
+                    print('pasoact')
+                    cur.execute("""
+                    UPDATE perfil_atributo
+                    SET IdAtributo = %s,
+                        IdUsuarioCreacion = %s,
+                        fechaCreacion = %s
+                    WHERE IdPerfil = %s
+                """,  (descripcion, IdUsuarioCreacion, fechaCreacion, id))
+                    
+                else:
+                    print('pasonuevo')
+                    cur.execute('INSERT INTO perfil_atributo (IdPerfil, IdAtributo, IdUsuarioCreacion, fechaCreacion) VALUES (%s, %s, %s, %s)',
+                (id, IdAtributo, IdUsuarioCreacion, fechaCreacion))
+                mysql.connection.commit()
+        else:
+            cur.execute('SELECT perfil_atributo.IdAtributo from perfil_atributo join atributo on perfil_atributo.IdAtributo=atributo.IdAtributo WHERE IdPerfil = %s and tipoAtributo="A" ', [id])
+            datacheckA = cur.fetchall()
+            if datacheckA:
+                for dtc in datacheckA:
+                    IdAtributo = dtc
+                    print(dtc)
+                    cur = mysql.connection.cursor() 
+                    cur.execute('DELETE FROM perfil_atributo WHERE IdPerfil = %s and IdAtributo = %s', [id,IdAtributo])
+                    mysql.connection.commit()
+            
+    flash('Perfil actualizado correctamente')
+    return redirect(url_for('perfil'))
+
+@app.route('/saveNewPerfil', methods = ['POST'])
+def saveNewPerfil():
+
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    if request.method == 'POST':
+
+        descripcion = request.form['descripcion']
+        IdUsuarioCreacion = session['id']
+        fechaCreacion = datetime.now()
+        cur.execute('INSERT INTO perfil (descripcion, IdUsuarioCreacion, fechaCreacion) VALUES (%s, %s, %s)',
+        (descripcion, IdUsuarioCreacion, fechaCreacion))  
+        mysql.connection.commit()
+        cur.execute('SELECT MAX(IdPerfil) FROM PERFIL WHERE IdUsuarioCreacion = %s', [session['id']])
+        IdPerfilNew = cur.fetchone()
+
+
+        if ((request.form['estudios']) or (request.form['estudios1']) or (request.form['estudios2'])):
+            c = 0
+            for c in range(3):
+                if c == 0:
+                    if request.form['estudios']:
+                        IdAtributo = request.form['estudios'][:2]
+                        IdEstado = request.form['estado']
+                else:
+                    if request.form['estudios'+ str(c)]:
+                        IdAtributo = request.form['estudios' + str(c)][:2]
+                        IdEstado = request.form['estado'+ str(c)]
+                
+                if IdAtributo:
+                    IdUsuarioCreacion = session['id']
+                    fechaCreacion = datetime.now()
+                    cur = mysql.connection.cursor() 
+                    cur.execute('INSERT INTO perfil_atributo (IdPerfil, IdAtributo, IdNivel, IdUsuarioCreacion, fechaCreacion) VALUES (%s, %s, %s, %s, %s)',
+                    (IdPerfilNew, IdAtributo, IdEstado, IdUsuarioCreacion, fechaCreacion))
+                    mysql.connection.commit()
+                IdAtributo = ""
+                c = c + 1
+
+        if ((request.form['idioma']) or (request.form['idioma1']) or (request.form['idioma2'])):            
+            c = 0
+            for c in range(3):
+                if c == 0:
+                    if request.form['idioma']:
+                        IdAtributo = request.form['idioma'][:2]
+                        IdEstado = request.form['nivel']
+                else:
+                    if request.form['idioma'+ str(c)]:
+                        IdAtributo = request.form['idioma' + str(c)][:2]
+                        IdEstado = request.form['nivel'+ str(c)]
+                if IdAtributo:                        
+                    IdUsuarioCreacion = session['id']
+                    fechaCreacion = datetime.now()
+                    cur = mysql.connection.cursor() 
+                    cur.execute('INSERT INTO perfil_atributo (IdPerfil, IdAtributo, IdNivel, IdUsuarioCreacion, fechaCreacion) VALUES (%s, %s, %s, %s, %s)',
+                    (IdPerfilNew, IdAtributo, IdEstado, IdUsuarioCreacion, fechaCreacion))
+                    mysql.connection.commit()
+                IdAtributo = ""
+                c = c + 1
+
+        if ((request.form['Herramientas']) or (request.form['Herramientas1']) or (request.form['Herramientas2'])): 
+            c = 0
+            for c in range(3):
+                if c == 0:
+                    if request.form['Herramientas']:
+                        IdAtributo = request.form['Herramientas'][:2]
+                        IdEstado = request.form['niveltecnico']
+                else:
+                    if request.form['Herramientas'+ str(c)]:
+                        IdAtributo = request.form['Herramientas' + str(c)][:2]
+                        IdEstado = request.form['niveltecnico'+ str(c)]
+                if IdAtributo:
+                    IdUsuarioCreacion = session['id']
+                    fechaCreacion = datetime.now()
+                    cur = mysql.connection.cursor() 
+                    cur.execute('INSERT INTO perfil_atributo (IdPerfil, IdAtributo, IdNivel, IdUsuarioCreacion, fechaCreacion) VALUES (%s, %s, %s, %s, %s)',
+                    (IdPerfilNew, IdAtributo, IdEstado, IdUsuarioCreacion, fechaCreacion))
+                    mysql.connection.commit()
+                IdAtributo = ""
+                c = c + 1
+            
+
+
+
+        if ('formcheck' in request.form):
+            for f in request.form.getlist('formcheck'):
+                IdAtributo = f
+                IdUsuarioCreacion = session['id']
+                fechaCreacion = datetime.now()
+                cur = mysql.connection.cursor()
+                cur.execute('INSERT INTO perfil_atributo (IdPerfil, IdAtributo, IdUsuarioCreacion, fechaCreacion) VALUES (%s, %s, %s, %s)',
+                (IdPerfilNew, IdAtributo, IdUsuarioCreacion, fechaCreacion))
+                mysql.connection.commit()
+            
+
+
+
+    flash('Perfil creado correctamente')
+    return redirect(url_for('perfil'))
 
 # logoaut
 @app.route('/logout')
