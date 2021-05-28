@@ -1,11 +1,27 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+<div class="position-fixed" style="left: 50px;">
+    <button style="left: 200; background-color: #ff6961; color: white;" class="btn" onclick="goBack()">Regresar</button>
 
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+</div>
 
 <div class="row">
     <div class="col md-5">
         <form action="/updatejobs/{{busqueda.0}}" method="POST">
+            <div class="position-fixed" style="right: 20px;">
+
+                <button type="submit" class="btn btn-primary" rigth style="float: right">
+                    Actualizar datos
+                </button>
+
+            </div>
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
@@ -48,7 +64,7 @@
                         </br>
                         <div class="row">
                             <div class="col-sm-4">
-                                <label for="fecha">Fecha:</label>
+                                <label for="fecha">Fecha de publicación:</label>
                                 <input type="date" id="start" name="fecha"
                                 max="{{ busqueda.12 }}" min="{{ busqueda.11 }}"  value="{{ busqueda.3 }}" class="form-control">
                             </div>
@@ -86,10 +102,7 @@
                 <br>
                 <br>
                 <div class="form group">
-                    <button type="submit" class="btn btn-primary" rigth style="float: right">
-                        Actualizar datos
-                    </button>
-                    <a href="{{url_for('mygridjobs')}}" class="btn btn-danger">Regresar</a>
+
                 </div>
             </div>
 

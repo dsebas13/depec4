@@ -13,68 +13,15 @@
 </div>
 <div class="row">
   <div class="col md-5">
-    <form action="/postular/{{busqueda.0}}" method="POST">
-      <div class="container">
-        <div class="row">
-          <div class="col md-5">
-            <div class="card text-black bg-white mb-2" style="display: block;">
-              <div class="card-body">
-                {% if busqueda.7 != session['id'] %}
-                {% if not UserPostulacion %} 
-                <button type="submit" class="btn btn-primary btn-add" rigth style="float: right">
-                  Postularme
-                </button>
-                {% endif %}
-                {% endif %}
-                <h4 class="card-title">{{ busqueda.0 }} | {{busqueda.2}}</h4>
-                <p class="card-text">{{ busqueda.11 }} </p>
-                <p class="card-text">Vacantes: {{ busqueda.4 }} </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr>
       <div class="row">
         <div class="col md-5">
           <div class="container">
             <div class="card card-body">
-              <div class="box-container container">
-                <h5>Detalle de la busqueda</h5>
-                <hr>
-                </p>
-                <div class="row">
-                  <div class="col-sm-4">
-                    <label for="fecha">Fecha de publicación</label>
-                    <label name="direccion" required class="form-control"> {{busqueda.3}} </label>
-                  </div>
-                  <div class="col-sm-4">
-                    <label for="contacto">Contacto</label>
-                    <label name="direccion" required class="form-control"> {{busqueda.16}} </label>
-                  </div>
-                  <div class="col-sm-4">
-                    <label for="alcance"></label>Telefono</label>
-                    <label name="direccion" required class="form-control"> {{tele.0}} </label>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <label for="alcance"></label>Alcance</label>
-                    <label name="direccion" required class="form-control"> {{busqueda.5}} </label>
-                  </div>
-                  <div class="col-sm-6">
-                    <label for="tareas"></label>Tareas</label>
-                    <label name="direccion" required class="form-control"> {{busqueda.6}} </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <hr>
             {% if dataA.0.0 != None or dataA.1.0 != None or dataA.2.0 != None or dataA.3.0 != None or dataA.4.0 != None
             or dataE or dataI or dataT%}
             <div class="card card-body">
               <div class="box-container container">
-                <h5 style="text-align: center;">Perfil: {{nombreperfil.0}} </h5>
+                <h5 style="text-align: center;">Perfil: {{descript.0.0}} </h5>
                 <hr>
                 {% if dataE %}
                 <div class="card card-body">

@@ -171,9 +171,7 @@ def get_cv(id):
     atrib = cur.fetchall()
     cur.execute('SELECT * FROM nivel order by IdNivel')
     level = cur.fetchall()
-
-
-    return render_template('edit-cv.html', cv = data[0])
+    return render_template('edit-cv.html', cv = data[0], direcccio = direc, atrib = atrib, level = level)
 
 
 # pantalla vista de un puesto cargado
@@ -187,7 +185,24 @@ def viewjob(id):
         return render_template('login.html')
     cur.execute('SELECT *,datediff(CURRENT_DATE, fechaPublicacion) as dias FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion join usuario on busqueda.IdUsuario = usuario.IdUsuario WHERE busqueda.IdBusqueda = {0}'.format(id))
     data = cur.fetchall()
-    return render_template('viewjob.html', busqueda = data[0])
+    cur.execute('SELECT * FROM postulacion where IdUsuario = %s and IdBusqueda = %s',[session['id'],id])
+    UserPostulacion = cur.fetchall()
+    print(UserPostulacion)
+    cur.execute('SELECT telefono FROM cv where IdUsuario = %s', [session['id']])
+    tele = cur.fetchone()
+    cur.execute('SELECT IdPerfil FROM busqueda WHERE IdBusqueda = %s', [id])
+    idperfilbusqueda = cur.fetchone()
+    cur.execute('SELECT descripcion from perfil where IdPerfil = %s', [idperfilbusqueda])
+    nombreperfil = cur.fetchone()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "I" ', [idperfilbusqueda])
+    dataI = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "E" ', [idperfilbusqueda])
+    dataE = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo left join perfil_atributo on perfil_atributo.IdAtributo = atributo.IdAtributo and perfil_atributo.IdPerfil = %s WHERE atributo.tipoAtributo = "A" ', [idperfilbusqueda])
+    dataA = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "T" ', [idperfilbusqueda])
+    dataT = cur.fetchall()
+    return render_template('viewjob.html', UserPostulacion = UserPostulacion, busqueda = data[0], tele = tele, nombreperfil = nombreperfil, dataI = dataI ,dataE = dataE, dataT = dataT ,dataA = dataA)
 
 # pantalla puestos cargados
 @app.route('/gridjobs', methods= ['GET','POST'])
@@ -209,9 +224,13 @@ def gridjobs():
     else:
         cur.execute('SELECT *,datediff(CURRENT_DATE, fechaPublicacion) as dias,CURRENT_DATE FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion order by dias')
         data = cur.fetchall()
+    cur.execute('SELECT * FROM postulacion where IdUsuario = %s',[session['id']])
+    UserPostulacion = cur.fetchall()
     cur.execute('SELECT direccion.IdDireccion, direccion.nombre as dia FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion where busqueda.fechaPublicacion <= CURRENT_DATE group by direccion.IdDireccion order by direccion.IdDireccion')
     direc = cur.fetchall()
-    return render_template('gridjobs.html', busqueda = data, direcccio = direc)
+    print(data)
+    print(UserPostulacion)
+    return render_template('gridjobs.html', UserPostulacion = UserPostulacion, busqueda = data, direcccio = direc)
 # post nuevo puesto
 @app.route('/mostrargrilla', methods= ['POST'])
 def mostrargrilla():
@@ -242,11 +261,12 @@ def nuevopuesto():
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
     if session['rol'] == 1:
-        cur.execute('SELECT *,CURRENT_DATE as dia FROM direccion')
-        direc = cur.fetchall()
-        cur.execute('SELECT *,CURRENT_DATE as dia, DATE_ADD(CURRENT_DATE,INTERVAL 30 DAY) as mastreinta FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion')
-        data = cur.fetchall()
-        return render_template('nuevopuesto.html', busqueda = data, direcccio = direc )
+        cur.execute('SELECT direccion.IdDireccion, direccion.nombre ,CURRENT_DATE as dia, DATE_ADD(CURRENT_DATE,INTERVAL 30 DAY) as mastreinta FROM direccion join usuario on direccion.IdDireccion = usuario.IdDireccion WHERE IdUsuario = %s',[session['id']])
+        direc = cur.fetchone()
+        cur.execute('SELECT IdPerfil, descripcion FROM perfil')
+        dataperfil = cur.fetchall()
+        print(dataperfil)
+        return render_template('nuevopuesto.html', direccio = direc, dataperfil = dataperfil )
     else:
         return render_template('home.html')  
 
@@ -318,10 +338,12 @@ def addnuevopuesto():
             vacantes = request.form['vacantes']
             alcance = request.form['alcance']
             tareas = request.form['tareas']
-            contacto = request.form['contacto']
+            IdUser = session['id']
+            IdEstado = 1
+            IdPerfil = str(request.form['perfil'][:2])
             cur = mysql.connection.cursor()
-            cur.execute('INSERT INTO busqueda (IdDireccion, puesto, fecha, vacantes, alcance, tareas, contacto) VALUES (%s, %s, %s, %s, %s, %s, %s)',
-            (IdDireccion, puesto, fechaPublicacion, vacantes, alcance, tareas, contacto))
+            cur.execute('INSERT INTO busqueda (IdDireccion, puesto, fechaPublicacion, vacantes, alcance, tarea, IdUsuario , IdEstado, IdPerfil) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)',
+            (IdDireccion, puesto, fechaPublicacion, vacantes, alcance, tareas, IdUser, IdEstado, IdPerfil))
             mysql.connection.commit()
             flash('Puesto agregado correctamente')
             return redirect(url_for('mygridjobs'))
@@ -544,7 +566,7 @@ def delete_cv(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html')
-    cur.execute('DELETE FROM cv WHERE id = {0}'.format(id))
+    cur.execute('DELETE FROM cv WHERE idCV = {0}'.format(id))
     mysql.connection.commit()
     flash('Contact Removed Successfully')
     return redirect(url_for('gridcv'))
@@ -617,6 +639,7 @@ def mygridjobs():
     cur.execute('SELECT *,datediff(CURRENT_DATE, fechaPublicacion) as dias,CURRENT_DATE FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion where busqueda.IdUsuario = %s order by dias', [session['id']] )
     data = cur.fetchall()
     a = len(data)
+    print(data)
     if data:
         return render_template('mygridjobs.html', busqueda = data, cantregistros = a)
     else:
@@ -645,6 +668,29 @@ def atributo(id):
         return render_template('atributo.html', cv = data, dato = dato)
     else:
         return render_template('home.html')
+
+#abm atributos
+@app.route('/veratributos/<string:id>')
+def veratributos(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html')
+    print(request.form)
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "I" ', [id])
+    dataI = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "E" ', [id])
+    dataE = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo left join perfil_atributo on perfil_atributo.IdAtributo = atributo.IdAtributo and perfil_atributo.IdPerfil = %s WHERE atributo.tipoAtributo = "A" ', [id])
+    dataA = cur.fetchall()
+    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "T" ', [id])
+    dataT = cur.fetchall()
+    cur.execute('SELECT descripcion FROM perfil where IdPerfil != %s',[id])
+    descript = cur.fetchall()
+    return render_template('veratributos.html', descript = descript, dataI = dataI, dataE = dataE, dataA = dataA, dataT = dataT)
+
 
 @app.route('/add_atributo/<string:id>', methods= ['POST'])
 def add_atributo(id):
@@ -710,8 +756,9 @@ def deleteatributo(id):
     if session['rol'] == 1:
         cur = mysql.connection.cursor()
         idatrib = request.form['idatrib']
-        cur.execute('SELECT * FROM cvatributo WHERE IdAtributo = %s', [idatrib])
+        cur.execute('SELECT * FROM perfil_atributo WHERE IdAtributo = %s', [idatrib])
         data = cur.fetchall()
+        print(data)
         if data:
             flash('Atributo asignado a uno o mas usuarios, no se puede eliminar')
             return redirect(url_for('atributo', id = id))
@@ -748,28 +795,28 @@ def editperfil(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html')
-    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel, idPerfilatributo, perfil_atributo.IdPerfil FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s', [id])
-    data = cur.fetchall()
-    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "I" ', [id])
-    dataI = cur.fetchall()
-    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "E" ', [id])
-    dataE = cur.fetchall()
-    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo left join perfil_atributo on perfil_atributo.IdAtributo = atributo.IdAtributo WHERE (perfil_atributo.IdPerfil = %s or perfil_atributo.IdPerfil is NULL) and atributo.tipoAtributo = "A" ', [id])
-    dataA = cur.fetchall()
-    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo left join perfil_atributo on perfil_atributo.IdAtributo = atributo.IdAtributo WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "A" ', [id])
-    dataAsi = cur.fetchall()
-    cur.execute('SELECT atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo WHERE atributo.tipoAtributo = "A" ')
-    dataTODO = cur.fetchall()
-    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "T" ', [id])
-    dataT = cur.fetchall()
-    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo WHERE perfil_atributo.IdPerfil = %s', [id])
-    dato = cur.fetchall()
-    cur.execute('SELECT * FROM atributo group by atributo order by atributo')
-    atrib = cur.fetchall()
-    cur.execute('SELECT * FROM nivel order by IdNivel')
-    level = cur.fetchall()
-    print(dataA)
-    return render_template('editperfil.html', perfil = data, dataAsi= dataAsi, dataTODO= dataTODO , dato = dato, dataI = dataI ,dataE = dataE, dataT = dataT ,dataA = dataA,  level = level, atrib = atrib)
+    if session['rol'] == 1:
+        cur.execute('SELECT IdPerfil, descripcion FROM perfil WHERE IdPerfil = %s', [id])
+        data = cur.fetchall()
+        cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "I" ', [id])
+        dataI = cur.fetchall()
+        cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "E" ', [id])
+        dataE = cur.fetchall()
+        cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo left join perfil_atributo on perfil_atributo.IdAtributo = atributo.IdAtributo and perfil_atributo.IdPerfil = %s WHERE atributo.tipoAtributo = "A" ', [id])
+        dataA = cur.fetchall()
+        cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "T" ', [id])
+        dataT = cur.fetchall()
+        cur.execute('SELECT descripcion FROM perfil where IdPerfil != %s',[id])
+        descript = cur.fetchall()
+        print(descript)
+        cur.execute('SELECT * FROM atributo group by atributo order by atributo')
+        atrib = cur.fetchall()
+        cur.execute('SELECT * FROM nivel order by IdNivel')
+        level = cur.fetchall()
+        print(data)
+        return render_template('editperfil.html', descript = descript, perfil = data, dataI = dataI ,dataE = dataE, dataT = dataT ,dataA = dataA,  level = level, atrib = atrib)
+    else:
+        return render_template('home.html')
 
 @app.route('/nuevoperfil')
 def nuevoperfil():
@@ -779,29 +826,32 @@ def nuevoperfil():
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html')
-    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel, idPerfilatributo, perfil_atributo.IdPerfil FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s', [id])
-    data = cur.fetchall()
-    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "I" ', [id])
-    dataI = cur.fetchall()
-    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "E" ', [id])
-    dataE = cur.fetchall()
-    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo left join perfil_atributo on perfil_atributo.IdAtributo = atributo.IdAtributo WHERE (perfil_atributo.IdPerfil = %s or perfil_atributo.IdPerfil is NULL) and atributo.tipoAtributo = "A" ', [id])
-    dataA = cur.fetchall()
-    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo left join perfil_atributo on perfil_atributo.IdAtributo = atributo.IdAtributo WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "A" ', [id])
-    dataAsi = cur.fetchall()
-    cur.execute('SELECT atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo WHERE atributo.tipoAtributo = "A" ')
-    dataTODO = cur.fetchall()
-    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "T" ', [id])
-    dataT = cur.fetchall()
-    cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo WHERE perfil_atributo.IdPerfil = %s', [id])
-    dato = cur.fetchall()
-    cur.execute('SELECT * FROM atributo group by atributo order by atributo')
-    atrib = cur.fetchall()
-    cur.execute('SELECT * FROM nivel order by IdNivel')
-    level = cur.fetchall()
-    print(dataA)
-    return render_template('nuevoperfil.html', perfil = data, dataAsi= dataAsi, dataTODO= dataTODO , dato = dato, dataI = dataI ,dataE = dataE, dataT = dataT ,dataA = dataA,  level = level, atrib = atrib)
-
+    if session['rol'] == 1:
+        cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel, idPerfilatributo, perfil_atributo.IdPerfil FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s', [id])
+        data = cur.fetchall()
+        cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "I" ', [id])
+        dataI = cur.fetchall()
+        cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "E" ', [id])
+        dataE = cur.fetchall()
+        cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo left join perfil_atributo on perfil_atributo.IdAtributo = atributo.IdAtributo WHERE (perfil_atributo.IdPerfil = %s or perfil_atributo.IdPerfil is NULL) and atributo.tipoAtributo = "A" ', [id])
+        dataA = cur.fetchall()
+        cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo left join perfil_atributo on perfil_atributo.IdAtributo = atributo.IdAtributo WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "A" ', [id])
+        dataAsi = cur.fetchall()
+        cur.execute('SELECT atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo WHERE atributo.tipoAtributo = "A" ')
+        dataTODO = cur.fetchall()
+        cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "T" ', [id])
+        dataT = cur.fetchall()
+        cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo WHERE perfil_atributo.IdPerfil = %s', [id])
+        dato = cur.fetchall()
+        cur.execute('SELECT * FROM atributo group by atributo order by atributo')
+        atrib = cur.fetchall()
+        cur.execute('SELECT * FROM nivel order by IdNivel')
+        level = cur.fetchall()
+        cur.execute('SELECT descripcion FROM perfil')
+        descript = cur.fetchall()
+        return render_template('nuevoperfil.html', perfil = data, descript = descript, dataAsi= dataAsi, dataTODO= dataTODO , dato = dato, dataI = dataI ,dataE = dataE, dataT = dataT ,dataA = dataA,  level = level, atrib = atrib)
+    else:
+        return render_template('home.html')
 
 @app.route('/updatePerfil/<string:id>', methods = ['POST'])
 def updatePerfil(id):
@@ -812,6 +862,21 @@ def updatePerfil(id):
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
     if request.method == 'POST':
+        descripcion = request.form['descripcion']
+        olddescripcion = request.form['olddescripcion']
+        if olddescripcion != descripcion:
+            cur = mysql.connection.cursor()
+            IdUsuarioCreacion = session['id']
+            fechaCreacion = datetime.now()
+            cur.execute("""
+                UPDATE perfil
+                SET descripcion = %s,
+                    IdUsuarioCreacion = %s,
+                    fechaCreacion = %s
+                WHERE IdPerfil = %s
+            """,  (descripcion, IdUsuarioCreacion, fechaCreacion, id))
+            mysql.connection.commit()
+
         print(request.form)
 
         c = 0
@@ -840,7 +905,9 @@ def updatePerfil(id):
                     ### con atrib anterior y idatributo == "" el usuario eliminimo ese atributo
                     cur.execute('DELETE FROM perfil_atributo WHERE IdPerfil = %s and IdAtributo = %s', [id,atribOld])
                     mysql.connection.commit()
-                else:  ### con anterior y atributo cargado update   
+                else:  ### con anterior y atributo cargado update 
+                    print(id)
+                    print(IdAtributo)  
                     cur.execute("""
                         UPDATE perfil_atributo
                         SET IdAtributo = %s,
@@ -850,6 +917,7 @@ def updatePerfil(id):
                         WHERE IdPerfil = %s and IdAtributo = %s
                     """,  (IdAtributo, IdEstado, IdUsuarioCreacion, fechaCreacion, id, atribOld))
                     mysql.connection.commit()
+            IdAtributo == ""
             c = c + 1
                     
         c = 0
@@ -888,6 +956,7 @@ def updatePerfil(id):
                         WHERE IdPerfil = %s and IdAtributo = %s
                     """,  (IdAtributo, IdEstado, IdUsuarioCreacion, fechaCreacion, id, atribOld))
                     mysql.connection.commit()
+            IdAtributo == ""
             c = c + 1
 
         c = 0
@@ -926,54 +995,41 @@ def updatePerfil(id):
                         WHERE IdPerfil = %s and IdAtributo = %s
                     """,  (IdAtributo, IdEstado, IdUsuarioCreacion, fechaCreacion, id, atribOld))
                     mysql.connection.commit()
+            IdAtributo == ""
             c = c + 1
             
-        descripcion = request.form['descripcion']
-        olddescripcion = request.form['olddescripcion']
-        if olddescripcion != descripcion:
-            print('entroperfil')
-            IdUsuarioCreacion = session['id']
-            fechaCreacion = datetime.now()
-            cur.execute("""
-                UPDATE perfil
-                SET descripcion = %s,
-                    IdUsuarioCreacion = %s,
-                    fechaCreacion = %s
-                WHERE IdPerfil = %s
-            """,  (descripcion, IdUsuarioCreacion, fechaCreacion, id))
-            mysql.connection.commit()
-
         if ('formcheck' in request.form):
-            for f in request.form.getlist('formcheck'):
-                IdAtributo = f
-                IdUsuarioCreacion = session['id']
-                fechaCreacion = datetime.now()
-                print(IdAtributo)
-                cur.execute('SELECT IdAtributo from perfil_atributo WHERE IdAtributo = %s and IdPerfil = %s' , [IdAtributo, id])
-                datcheck = cur.fetchone()
-                print(datcheck)
-                if datcheck:
-                    print('pasoact')
-                    cur.execute("""
-                    UPDATE perfil_atributo
-                    SET IdAtributo = %s,
-                        IdUsuarioCreacion = %s,
-                        fechaCreacion = %s
-                    WHERE IdPerfil = %s
-                """,  (descripcion, IdUsuarioCreacion, fechaCreacion, id))
+            dataOld = request.form.getlist('data')
+            dataNew = request.form.getlist('formcheck')
+            if dataOld == dataNew:
+                pass
+            else:
+                for dOld in dataOld:
+                    if dOld in dataNew:
+                        pass
+                    else:   ### delelete atributo esta en la vieja y no en la nueva
+                        IdAtributo = dOld
+                        cur = mysql.connection.cursor() 
+                        cur.execute('DELETE FROM perfil_atributo WHERE IdPerfil = %s and IdAtributo = %s', [id,IdAtributo])
+                        mysql.connection.commit()
+
+                for dNew in dataNew:
+                    if dNew in dataOld:
+                        pass
+                    else:  ### insert, nuevo atributo
+                        IdAtributo = dNew
+                        IdUsuarioCreacion = session['id']
+                        fechaCreacion = datetime.now()
+                        cur.execute('INSERT INTO perfil_atributo (IdPerfil, IdAtributo, IdUsuarioCreacion, fechaCreacion) VALUES (%s, %s, %s, %s)',
+                    (id, IdAtributo, IdUsuarioCreacion, fechaCreacion))
+                    mysql.connection.commit()
                     
-                else:
-                    print('pasonuevo')
-                    cur.execute('INSERT INTO perfil_atributo (IdPerfil, IdAtributo, IdUsuarioCreacion, fechaCreacion) VALUES (%s, %s, %s, %s)',
-                (id, IdAtributo, IdUsuarioCreacion, fechaCreacion))
-                mysql.connection.commit()
         else:
             cur.execute('SELECT perfil_atributo.IdAtributo from perfil_atributo join atributo on perfil_atributo.IdAtributo=atributo.IdAtributo WHERE IdPerfil = %s and tipoAtributo="A" ', [id])
             datacheckA = cur.fetchall()
             if datacheckA:
                 for dtc in datacheckA:
                     IdAtributo = dtc
-                    print(dtc)
                     cur = mysql.connection.cursor() 
                     cur.execute('DELETE FROM perfil_atributo WHERE IdPerfil = %s and IdAtributo = %s', [id,IdAtributo])
                     mysql.connection.commit()
@@ -1065,10 +1121,7 @@ def saveNewPerfil():
                     mysql.connection.commit()
                 IdAtributo = ""
                 c = c + 1
-            
-
-
-
+        
         if ('formcheck' in request.form):
             for f in request.form.getlist('formcheck'):
                 IdAtributo = f
@@ -1079,11 +1132,34 @@ def saveNewPerfil():
                 (IdPerfilNew, IdAtributo, IdUsuarioCreacion, fechaCreacion))
                 mysql.connection.commit()
             
-
-
-
     flash('Perfil creado correctamente')
     return redirect(url_for('perfil'))
+
+# borrado de perfil           
+@app.route('/deleteperfil/<string:id>', methods = ['POST', 'GET'])
+def deleteperfil(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    print(request.form)
+    if session['rol'] == 1:
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM perfil join perfil_atributo on perfil.IdPerfil = perfil_atributo.IdPerfil WHERE perfil.IdPerfil = %s', [id])
+        data = cur.fetchall()
+        print(data)
+        if data:
+            flash('El perfil tiene asignado uno o mas atributo, no se puede eliminar')
+            return redirect(url_for('perfil', id = id))
+        cur.execute('DELETE FROM perfil WHERE IdPerfil = %s', [id])
+        mysql.connection.commit()
+        flash('Perfil eliminado exitosamente')
+        return redirect(url_for('perfil', id = id))
+    else:
+        return render_template('home.html')
+
 
 # logoaut
 @app.route('/logout')
