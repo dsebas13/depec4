@@ -15,7 +15,7 @@ if(btnAdd) {
   const btnArray = Array.from(btnAdd);
   btnArray.forEach((btn) => {
     btn.addEventListener('click', (e) => {
-      if(!confirm('Esta seguro que desea postularse a esta busqueda?')){
+      if(!confirm('Esta seguro que desea postularse a esta búsqueda?')){
         e.preventDefault();
       }
     });
