@@ -21,3 +21,27 @@ if(btnAdd) {
     });
   })
 }
+
+const btnlock= document.querySelectorAll('.btn-lock');
+if(btnlock) {
+  const btnArray = Array.from(btnlock);
+  btnArray.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      if(!confirm('Esta seguro que desea cerrar esta busqueda, este proceso es irreversible?')){
+        e.preventDefault();
+      }
+    });
+  })
+}
+
+const btnpostu= document.querySelectorAll('.btn-postu');
+if(btnpostu) {
+  const btnArray = Array.from(btnpostu);
+  btnArray.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      if(!confirm('Esta seguro que desea inactivar su postulación?')){
+        e.preventDefault();
+      }
+    });
+  })
+}
