@@ -30,8 +30,8 @@
             <thead>
                 <tr>
                     <td style="width: 6.7%;">Dni</td>
-                    <td style="width: 6.7%;">Nombre</td>
                     <td style="width: 7.4%;">Apellido</td>
+                    <td style="width: 6.7%;">Nombre</td>
                     <td style="width: 8.2%;">Telefono</td>
                     <td style="width: 21.2%;">Email</td>
                     <td style="width: 30%;">Dirección</td>
@@ -44,8 +44,8 @@
                 {% for c in cvuser %}
                 <tr>
                     <td> {{c.13 }}  </td>
-                    <td> {{ c.7.capitalize() }} </td>
                     <td> {{ c.8.capitalize() }} </td>
+                    <td> {{ c.7.capitalize() }} </td>
                     <td> {{ c.1 }}</td>
                     <td> {{ c.9 }} </td>
                     <td> {{ c.17 }} </td>
@@ -72,19 +72,19 @@
 </div>
 {% if session['rol'] == 1 %}
 <hr>
-<div class="row">
+<div class="row " style="margin-bottom: 100px;">
     <div class="col md-7">
         <table id="myTable2" class="table table-striped table-bordered bg-white table-sm">
             <h2>Listado de CV's ingresados</h2>         
             <thead>
                 <tr>
-                    <td style="width: 6.7%;">Dni</td>
+                    <td style="width: 6.7%;"onclick="sortTable(0)">Dni<i right style="float: right; margin-top: 3px;" class="fas fa-sort"></i></td>
+                    <td style="width: 7.4%; "onclick="sortTable(1)">Apellido <i right style="float: right;  margin-top: 3px;" class="fas fa-sort"></i></td>
                     <td style="width: 6.7%;">Nombre</td>
-                    <td style="width: 7.4%; "onclick="sortTable(0)">Apellido <i right style="float: right;" class="fas fa-sort"></i></td>
                     <td style="width: 8.2%;">Telefono</td>
                     <td style="width: 21.2%;">Email</td>
-                    <td style="width: 30%;"onclick="sortTable(1)">Dirección<i right style="float: right;" class="fas fa-sort"></i></td>
-                    <td>Actualizado</td>
+                    <td style="width: 30%;"onclick="sortTable(2)">Dirección<i right style="float: right;  margin-top: 3px;" class="fas fa-sort"></i></td>
+                    <td onclick="sortTable(3)">Actualizado<i right style="float: right; margin-top: 3px;" class="fas fa-sort"></i></td>
                     <td>Operaciones</td>
                 </tr>
             </thead>
@@ -92,8 +92,8 @@
                 {% for c in cv %}
                 <tr>
                     <td> {{ c.13 }} </td>
-                    <td> {{ c.7.capitalize() }} </td>
                     <td> {{ c.8.capitalize() }} </td>
+                    <td> {{ c.7.capitalize() }} </td>
                     <td> {{ c.1 }} </td>
                     <td> {{ c.9 }} </td>
                     <td> {{ c.17 }} </td>

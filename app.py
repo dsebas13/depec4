@@ -46,6 +46,46 @@ def home():
     conta = cur.fetchall()
     return render_template('home.html', session = session, cv = conta)
 
+@app.route('/quienessomos')
+def quienessomos():
+    if 'loggedin' in session:
+        pass
+    else:     
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html')
+    return render_template('quienessomos.html')
+
+@app.route('/agradecimientos')
+def agradecimientos():
+    if 'loggedin' in session:
+        pass
+    else:     
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html')
+    return render_template('agradecimientos.html')
+
+@app.route('/mesadeayuda')
+def mesadeayuda():
+    if 'loggedin' in session:
+        pass
+    else:     
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html')
+    return render_template('mda.html')
+
+@app.route('/contacto', methods= ['POST', 'GET'])
+def contacto():
+    if 'loggedin' in session:
+        pass
+    else:     
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html')
+
+    if request.form:
+        flash('Se ha enviado la consulta correctamente')
+        return render_template('home.html')
+    return render_template('contacto.html')
+
 @app.route('/')
 def my_form():
     if 'loggedin' in session:
@@ -72,6 +112,10 @@ def login():
         session['surname'] = account[2]
         session['rol'] = account[6]
         session['dni'] = account[7]
+        cur.execute('SELECT IdCV FROM cv WHERE IdUsuario = %s', [session['id']])
+        data = cur.fetchall()  
+        if data:
+            return redirect(url_for('home', dataCV = data ))
         return redirect(url_for('home'))
     else:
         flash('Usuario o contraseña incorrectos')
@@ -137,6 +181,72 @@ def gridcv():
     datacv = cur.fetchall()
     return render_template('gridcv.html', cv = data, cvuser = datacv)
 
+# pantalla grilla cvs cargados
+@app.route('/buscar/<string:id>', methods= ['POST','GET'])
+def buscar(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    buscar = 0
+    if request.form:
+        user = str(session['id'])
+        if id == 'P':
+            sqlwhere = "SELECT usuario.dni, usuario.apellido, usuario.nombre, cv.telefono, usuario.email, direccion.nombre, cv.fechaCreacion, cv.IdCV, cv.CvBase64 FROM cv join usuario on usuario.IdUsuario = cv.IdUsuario join direccion on usuario.IdDireccion = direccion.IdDireccion where cv.IdUsuario != " + user 
+            
+            if request.form['text1']:
+                sqlwhere = sqlwhere + " and CvRead like '%" + request.form['text1'] + "%'"
+            if request.form['text2']:
+                sqlwhere = sqlwhere + " and CvRead like '%" + request.form['text2'] + "%'"
+            if request.form['text3']:
+                sqlwhere = sqlwhere + " and CvRead like '%" + request.form['text3'] + "%'"
+            if request.form['text4']:
+                sqlwhere = sqlwhere + " and CvRead like '%" + request.form['text4'] + "%'"
+            if request.form['text5']:
+                sqlwhere = sqlwhere + " and CvRead like '%" + request.form['text5'] + "%'"
+        else:
+            sqlwhere = "SELECT usuario.dni, usuario.apellido, usuario.nombre, cv.telefono, usuario.email, direccion.nombre, cv.fechaCreacion, cv.IdCV, cv.CvBase64 FROM cv join usuario on usuario.IdUsuario = cv.IdUsuario join direccion on usuario.IdDireccion = direccion.IdDireccion join cvatributo on cvatributo.IdCV = cv.IdCV where cv.IdUsuario != " + user 
+            sqlIdCV = " and cv.IdCV in (select cvatributo.IdCV from cvatributo where cvatributo.IdAtributo = "
+            if request.form['estudios']:
+                sqlwhere = sqlwhere + " and cv.IdCV in (select cvatributo.IdCV from cvatributo where cvatributo.IdAtributo = " + request.form['estudios'] + ") "
+            if request.form['estudios1']:
+                sqlwhere = sqlwhere + sqlIdCV + request.form['estudios1'] + ") "
+            if request.form['estudios2']:
+                sqlwhere = sqlwhere + sqlIdCV + request.form['estudios2'] + ") "
+            if request.form['idiomas']:
+                sqlwhere = sqlwhere + sqlIdCV + request.form['idiomas'] + ") "
+            if request.form['idiomas1']:
+                sqlwhere = sqlwhere + sqlIdCV + request.form['idiomas1'] + ") "
+            if request.form['idiomas2']:
+                sqlwhere = sqlwhere + sqlIdCV + request.form['idiomas2'] + ") "
+            if request.form['tecnicas']:
+                sqlwhere = sqlwhere + sqlIdCV + request.form['tecnicas'] + ") "
+            if request.form['tecnicas1']:
+                sqlwhere = sqlwhere + sqlIdCV + request.form['tecnicas1'] + ") "
+            if request.form['tecnicas2']:
+                sqlwhere = sqlwhere + sqlIdCV + request.form['tecnicas2'] + ") "
+            if request.form.getlist('formcheck'):
+                for f in request.form.getlist('formcheck'):
+                    sqlwhere = sqlwhere + sqlIdCV + f + ") "
+        
+        cur.execute(sqlwhere + " group by usuario.dni")
+        buscar = cur.fetchall()
+        if not buscar:
+            flash('No se hay encontrado CVs con los datos ingreados')
+    cur.execute('SELECT atributo.IdAtributo, cvatributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM cvatributo right join atributo on cvatributo.IdAtributo = atributo.IdAtributo and cvatributo.IdCV = %s WHERE atributo.tipoAtributo = "A" ', [id])
+    dataA = cur.fetchall()
+    cur.execute('SELECT cvatributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, nivel.IdNivel, nivel.nivel FROM cvatributo join atributo on cvatributo.IdAtributo = atributo.IdAtributo join nivel on cvatributo.IdNivel = nivel.IdNivel WHERE cvatributo.IdCV = %s and atributo.tipoAtributo = "I" ', [id])
+    dataI = cur.fetchall()
+    cur.execute('SELECT cvatributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, nivel.IdNivel, nivel.nivel FROM cvatributo join atributo on cvatributo.IdAtributo = atributo.IdAtributo join nivel on cvatributo.IdNivel = nivel.IdNivel WHERE cvatributo.IdCV = %s and atributo.tipoAtributo = "E" ', [id])
+    dataE = cur.fetchall()
+    cur.execute('SELECT cvatributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, nivel.IdNivel, nivel.nivel FROM cvatributo join atributo on cvatributo.IdAtributo = atributo.IdAtributo join nivel on cvatributo.IdNivel = nivel.IdNivel WHERE cvatributo.IdCV = %s and atributo.tipoAtributo = "T" ', [id])
+    dataT = cur.fetchall()
+    cur.execute('SELECT * FROM atributo group by atributo order by atributo')
+    atrib = cur.fetchall()
+    return render_template('buscar.html', buscar = buscar, atrib = atrib, dataA = dataA, dataI = dataI, dataE = dataE, dataT = dataT, id = id)
+
 # pantalla ver cv
 @app.route('/viewcv/<string:id>')
 def viewcv(id):
@@ -176,7 +286,7 @@ def get_cv(id):
 
     cur.execute('SELECT cvdireccion.IdCV, cvdireccion.IdDireccion, direccion.nombre, cvdireccion.FechaDesde, cvdireccion.FechaHasta, cvdireccion.Puesto, cvdireccion.Tarea FROM cvdireccion join cv on cvdireccion.IdCV = cv.IdCV join direccion on cvdireccion.IdDireccion = direccion.IdDireccion WHERE IdUsuario = %s',[session['id']])
     cvdireccion = cur.fetchall()    ### direcciones del usuario
-    print(cvdireccion)
+
     cur.execute('SELECT * FROM cv WHERE IdUsuario = %s',[session['id']])   #### cv del usuario
     cvUser = cur.fetchone()
     cur.execute('SELECT direccion.IdDireccion,direccion.nombre FROM direccion group by direccion.IdDireccion order by direccion.IdDireccion')
@@ -212,7 +322,7 @@ def viewjob(id):
     data = cur.fetchall()
     cur.execute('SELECT * FROM postulacion where IdUsuario = %s and IdBusqueda = %s',[session['id'],id])
     UserPostulacion = cur.fetchall()
-    print(UserPostulacion)
+
     cur.execute('SELECT telefono FROM cv where IdUsuario = %s', [session['id']])
     tele = cur.fetchone()
     cur.execute('SELECT IdPerfil FROM busqueda WHERE IdBusqueda = %s', [id])
@@ -241,7 +351,7 @@ def gridjobs():
     sqlwhere = "SELECT *,datediff(CURRENT_DATE, fechaPublicacion) as dias,CURRENT_DATE from busqueda JOIN direccion on direccion.IdDireccion = busqueda.IdDireccion LEFT JOIN postulacion on postulacion.IdBusqueda = busqueda.IdBusqueda WHERE busqueda.IdEstado = '1' AND busqueda.fechaPublicacion <= CURRENT_DATE " 
     seleccion = []
     dir = 0
-    print(request.form)
+
     if request.form:
         direccion = request.form['iddireccion']
         if request.form['iddireccion'] != "T":
@@ -278,7 +388,7 @@ def gridjobs():
     else:
         cur.execute(sqlwhere + "GROUP by busqueda.IdBusqueda order by dias")
         data = cur.fetchall()
-    print(seleccion)
+
     cur.execute('SELECT * FROM postulacion where IdUsuario = %s',[session['id']])
     UserPostulacion = cur.fetchall()
     cur.execute('SELECT direccion.IdDireccion, direccion.nombre as dia FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion where busqueda.fechaPublicacion <= CURRENT_DATE and busqueda.IdEstado = "1" group by direccion.IdDireccion order by direccion.IdDireccion')
@@ -326,7 +436,7 @@ def nuevopuesto():
         direc = cur.fetchone()
         cur.execute('SELECT IdPerfil, descripcion FROM perfil')
         dataperfil = cur.fetchall()
-        print(dataperfil)
+
         return render_template('nuevopuesto.html', direccio = direc, dataperfil = dataperfil )
     else:
         return render_template('home.html')  
@@ -340,7 +450,7 @@ def editjobs(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html')
-    print(id)
+
     if session['rol'] == 1:
         cur.execute('SELECT direccion.IdDireccion, direccion.nombre ,CURRENT_DATE as dia, DATE_ADD(CURRENT_DATE,INTERVAL 30 DAY) as mastreinta FROM direccion join usuario on direccion.IdDireccion = usuario.IdDireccion WHERE IdUsuario = %s',[session['id']])
         direc = cur.fetchone()
@@ -348,7 +458,7 @@ def editjobs(id):
         data = cur.fetchall()
         cur.execute('SELECT IdPerfil, descripcion from perfil where IdPerfil != (SELECT perfil.IdPerfil FROM perfil join busqueda on perfil.IdPerfil = busqueda.Idperfil WHERE busqueda.IdBusqueda = %s)',[id])
         dataperfil = cur.fetchall()
-        print(dataperfil)
+
         return render_template('editjobs.html', busqueda = data[0], direccio = direc, dataperfil = dataperfil)
     else:
         return render_template('home.html')  
@@ -362,7 +472,7 @@ def updatejobs(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
-    print(request.form)
+
     if request.method == 'POST':
         IdDireccion = str(request.form['iddireccion'][:2])
         puesto = request.form['puesto']
@@ -436,9 +546,15 @@ def add_cv():
         ### pdf a texto
         pdf_doc = f.filename
         documento = fitz.open(pdf_doc)
-        
+        salida = open(f.filename + ".txt", "wb")
         for pagina in documento:
             texto = pagina.getText().encode("utf8")
+            salida.write(texto)
+            salida.write(b"\n-----\n")
+        salida.close()
+        ### texto del txt a variable
+        with open(f.filename + ".txt", encoding="utf-8") as archivo:
+            cadena = archivo.read()
 
         ### pdf a base 64
         with open((os.path.join(app.config['UPLOAD_FOLDER'], f.filename)), "rb") as pdf_file:
@@ -447,9 +563,8 @@ def add_cv():
         telefono = request.form['telefono']
 
         IdUsuario = session['id']
-        IdPerfil = 1
         fechaCreacion  = datetime.now()
-        CvRead = texto
+        CvRead = cadena
         CvBase64 = encoded_string
 
 
@@ -602,7 +717,6 @@ def updatecv(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
-    print(request.form)
     if request.method == 'POST':
         telefonoOld = request.form['telephoneOld']
         telefono = request.form['telefono']
@@ -614,12 +728,21 @@ def updatecv(id):
             ### pdf a texto
             pdf_doc = f.filename
             documento = fitz.open(pdf_doc)
+
+            salida = open(f.filename + ".txt", "wb")
             for pagina in documento:
                 texto = pagina.getText().encode("utf8")
+                salida.write(texto)
+                salida.write(b"\n-----\n")              
+            salida.close()
+            ### texto del txt a variable
+            with open(f.filename + ".txt", encoding="utf-8") as archivo:
+                cadena = archivo.read()
+            
             ### pdf a base 64
             with open((os.path.join(app.config['UPLOAD_FOLDER'], f.filename)), "rb") as pdf_file:
                 encoded_string = base64.b64encode(pdf_file.read())
-            CvRead = texto
+            CvRead = cadena
             CvBase64 = encoded_string
             cur.execute("""
             UPDATE cv
@@ -649,16 +772,12 @@ def updatecv(id):
                 Puesto = request.form['puesto']
                 Tarea = request.form['tareas']
             else:
-                print('entro')
-                print(request.form['iddireccion' + str(c)])
                 IdDireccion = request.form['iddireccion' + str(c)]
                 FechaDesde = request.form['fechaIngreso' + str(c)]
                 FechaHasta = request.form['fechaEgreso' + str(c)]
                 Puesto = request.form['puesto' + str(c)]
                 Tarea = request.form['tareas' + str(c)]
             if IdDireccion:
-                print('paso')
-                print(IdDireccion)
                 cur = mysql.connection.cursor() 
                 cur.execute('INSERT INTO cvdireccion (IdCV, IdDireccion, FechaDesde, FechaHasta, Puesto, Tarea) VALUES (%s, %s, %s, %s, %s, %s)',
                 (id, IdDireccion, FechaDesde, FechaHasta, Puesto, Tarea))
@@ -672,17 +791,13 @@ def updatecv(id):
         c = 0
         for c in range(3):
             if c == 0:
-                print('entroestudio')
-                
                 IdAtributo = request.form['estudios']
                 IdNivel = request.form['estado']
-                print(IdAtributo)
+
             else:
                 IdAtributo = request.form['estudios' + str(c)]
                 IdNivel = request.form['estado' + str(c)]
             if IdAtributo and IdNivel:
-                print('entroestudio1')
-                print(IdAtributo)
                 cur = mysql.connection.cursor()
                 cur.execute('INSERT INTO cvatributo (IdCV, IdAtributo, IdNivel) VALUES (%s, %s, %s)',
                 (id, IdAtributo, IdNivel))
@@ -799,7 +914,6 @@ def mispostulaciones():
             seleccion.append("0")
     cur.execute(sqlwhere + " order by dias")
     data = cur.fetchall()
-    print(seleccion)
     if not data:
         if start or end:
             flash('No existen postulaciones con los parámetros ingresados')
@@ -824,7 +938,6 @@ def cambiarmipostulacion(id):
         unoocero = 2
     else:
         unoocero = 1
-    print(unoocero)
     cur.execute("""
         UPDATE postulacion 
         SET IdEstado = %s
@@ -849,7 +962,6 @@ def cambiarjobs(id):
         unoocero = 2
     else:
         unoocero = 1
-    print(unoocero)
     cur.execute("""
         UPDATE busqueda 
         SET IdEstado = %s
@@ -868,7 +980,7 @@ def lockjobs(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html')
-    print(request.form)
+
     IdBusqueda = id
     lockBusqueda = request.form['lockbusqueda']
     if lockBusqueda == '1' or lockBusqueda == '2':
@@ -893,12 +1005,11 @@ def deletejobs(id):
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
     
-    print(request.form)
+
     if session['rol'] == 1:
         cur = mysql.connection.cursor()
         cur.execute('SELECT * FROM postulacion WHERE IdBusqueda = %s', [id])
         data = cur.fetchall()
-        print(data)
         if data:
             flash('Hay postulados uno o mas agentes a la busqueda, no se puede eliminar')
             return redirect(url_for('mygridjobs', id = id))
@@ -952,7 +1063,7 @@ def seleccionpostulacions(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
-    print(request.form)
+
     seleccion = request.form['seleccion']
     
     IdPostulacion = request.form['idPostulacion']
@@ -985,8 +1096,20 @@ def bajarcv():
     nombrearchivo = request.form['nameuser'] + '_cv'
     f = open('./Archivos PDF/'+ nombrearchivo + '.pdf', 'wb')
     f.write(bytes)
+    f.close()
     return send_file(r'C:/Users/a1/Desktop/flask/Archivos PDF/'+ nombrearchivo + '.pdf', attachment_filename=nombrearchivo +'.pdf')
 
+
+
+@app.route('/manualdeuso', methods= ['POST', 'GET'])
+def manualdeuso():
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+
+    nombrearchivo = "Manual de Uso"
+    return send_file(r'C:/Users/a1/Desktop/flask/Archivos PDF/'+ nombrearchivo + '.pdf', attachment_filename=nombrearchivo +'.pdf')
 
 
 # pantalla puestos cargados
@@ -1026,10 +1149,9 @@ def mygridjobs():
                 seleccion.append("3")
         else:
             seleccion.append("0")
-    print(seleccion)
+
     cur.execute(sqlwhere + " order by dias")
     data = cur.fetchall()
-    print(data)
     if not data:
         flash('No existen busquedas con los parametros ingresados')
     return render_template('mygridjobs.html', busqueda = data, seleccion = seleccion)
@@ -1082,7 +1204,7 @@ def veratributos(id):
 
 @app.route('/add_atributo/<string:id>', methods= ['POST'])
 def add_atributo(id):
-    print(id)
+
     cur = mysql.connection.cursor()
     if 'loggedin' in session:
         pass
@@ -1138,13 +1260,13 @@ def deleteatributo(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
-    print(request.form)
+
     if session['rol'] == 1:
         cur = mysql.connection.cursor()
         idatrib = request.form['idatrib']
         cur.execute('SELECT * FROM perfil_atributo WHERE IdAtributo = %s', [idatrib])
         data = cur.fetchall()
-        print(data)
+
         if data:
             flash('Atributo asignado a uno o mas usuarios, no se puede eliminar')
             return redirect(url_for('atributo', id = id))
@@ -1166,7 +1288,7 @@ def perfil():
         return render_template('login.html') 
     cur.execute('SELECT * FROM perfil')
     data = cur.fetchall()
-    print(data)
+
     if data:
         return render_template('perfil.html', perfil = data)
     else:
@@ -1190,12 +1312,12 @@ def editperfil(id):
         dataE = cur.fetchall()
         cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo left join perfil_atributo on perfil_atributo.IdAtributo = atributo.IdAtributo and perfil_atributo.IdPerfil = %s WHERE atributo.tipoAtributo = "A" ', [id])
         dataA = cur.fetchall()
-        print(dataA)
+
         cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "T" ', [id])
         dataT = cur.fetchall()
         cur.execute('SELECT descripcion FROM perfil where IdPerfil != %s',[id])
         descript = cur.fetchall()
-        print(descript)
+
         cur.execute('SELECT * FROM atributo group by atributo order by atributo')
         atrib = cur.fetchall()
         cur.execute('SELECT * FROM nivel order by IdNivel')
@@ -1263,7 +1385,6 @@ def updatePerfil(id):
             """,  (descripcion, IdUsuarioCreacion, fechaCreacion, id))
             mysql.connection.commit()
 
-        print(request.form)
 
         c = 0
         for c in range(3):
@@ -1292,8 +1413,7 @@ def updatePerfil(id):
                     cur.execute('DELETE FROM perfil_atributo WHERE IdPerfil = %s and IdAtributo = %s', [id,atribOld])
                     mysql.connection.commit()
                 else:  ### con anterior y atributo cargado update 
-                    print(id)
-                    print(IdAtributo)  
+
                     cur.execute("""
                         UPDATE perfil_atributo
                         SET IdAtributo = %s,
@@ -1530,12 +1650,12 @@ def deleteperfil(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
-    print(request.form)
+
     if session['rol'] == 1:
         cur = mysql.connection.cursor()
         cur.execute('SELECT * FROM perfil join perfil_atributo on perfil.IdPerfil = perfil_atributo.IdPerfil WHERE perfil.IdPerfil = %s', [id])
         data = cur.fetchall()
-        print(data)
+
         if data:
             flash('El perfil tiene asignado uno o mas atributo, no se puede eliminar')
             return redirect(url_for('perfil', id = id))

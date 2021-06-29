@@ -3,7 +3,7 @@
 {% block body %}
 
 
-<div class="row">
+<div class="row" style="margin-bottom: 100px;">
     <div class="col md-7">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -119,7 +119,9 @@
 
         {% for b in busqueda %}
         {% if b.8 == 1 %}
-        {% if b.3 <= b.21 %} <div class="card text-black bg-white mb-2" style="display: block;">
+        {% if b.3 <= b.21 %} 
+        
+        <div class="card text-black bg-white mb-2" style="display: block;">
 
             <div class="card-body">
                 <h4 class="card-title">{{ b.0 }} | {{b.2}}</h4>

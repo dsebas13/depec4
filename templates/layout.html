@@ -9,7 +9,6 @@
   <title>DePeC</title>
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='image/soloLogo_Indec.png')}}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
   <!-- <link rel="stylesheet" type="text/css" href="/static/css/fontawesome/css/all.css"> -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
@@ -58,7 +57,7 @@
       </td>
       <td style="width: 80%">
         <nav class="navbar navbar-expand-lg navbar-dark"
-          style="background-color: rgba(33,156,151,1); border-radius: 30px; height: 50px;">
+          style="background-color: rgba(33,156,151,1); border-radius: 30px; ">
 
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,9 +83,11 @@
                 </div>
               </li>
               {% else %}
+
               <li class="nav-item">
                 <a class="nav-link" href="/gridjobs">Busquedas Activas</a>
               </li>
+ 
               {% endif %}
               &nbsp;
               &nbsp;
@@ -122,16 +123,27 @@
               <li class="nav-item">
                 <a class="nav-link" href="/perfil">Perfil</a>
               </li>
+              &nbsp;
+              &nbsp;
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                  aria-expanded="false">Buscar CV</a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="/buscar/P">Buscar por palabras</a>
+                  <a class="dropdown-item" href="/buscar/A">Buscar por Atributos</a>
+                </div>
+              </li>
               {% endif %}
             </ul>
+            <h5 style="color: white; margin-top: 10px;"> Usuario: {{session['name'].capitalize()}}
+              {{session['surname'].capitalize()}}&#10;{%if
+              session['rol'] == 1 %}Rol: Admin {% else %}Rol: User {% endif %} </h5><br>
+            &nbsp;
           </div>
 
           &nbsp;
 
-          <h5 style="color: white; margin-top: 10px;"> Usuario: {{session['name'].capitalize()}}
-            {{session['surname'].capitalize()}}&#10;{%if
-            session['rol'] == 1 %}Rol: Admin {% else %}Rol: User {% endif %} </h5><br>
-          &nbsp;
+
 
 
           &nbsp;
@@ -158,26 +170,34 @@
     {% block body%}
     {% endblock %}
   </div>
+  
   <table width="100%">
-    <tr style="background-color: rgb(65, 65, 65); color:white; height: 10vh;">
-      <td style="width: 5%;">
+    <tr style="background-color: rgb(65, 65, 65); color:white; bottom: 0; position: fixed;">
+      <td style="width: 10%;">
 
       </td>
-      <td style="text-align: left;">
-          Desarrollo Personal de Carrera <br> <br>
-          Quienes Somos
+      <td style="text-align: left; width: 30%; " >
+          <strong>DESARROLLO PERSONAL DE CARRERA</strong>  <br> <br>
+          <a style=" color: currentColor;" target="_blank" href="https://www.indec.gob.ar/indec/web/Institucional-Indec-Organigrama">Organigrama INDEC</a> <br> <br>
+          <a style=" color: currentColor;" href="/quienessomos">Quienes Somos</a>
       </td>
       <td>
-        Mesa de Ayuda
+        <br><br> <a style="color: currentColor;" href="/mesadeayuda">Mesa de Ayuda</a> <br><br>
+        
+        <a style=" color: currentColor;" target="_blank" href="/static/image/mapadelsitio.png">Mapa del Sitio</a>
+
       </td>
       <td>
-        <i class="far fa-copyright"></i>opyright 
+        <br><br><i class="far fa-copyright"></i>opyright 2021 
+        <br><br>
+        <a style=" color: currentColor;" href="/contacto">Contactanos</a>
       </td>
-      <td style="text-align: right;">
-        Version: 1.1 <br> <br>
-        Agradecimientos 
+      <td style="text-align: right; width: 5%;">
+        <strong>VERSION: 1.1</strong> <br> <br>
+        <a style="color: currentColor;" href="/agradecimientos">Agradecimientos</a> <br> <br>
+        <a style=" color: currentColor;" target="_blank" href="/manualdeuso">Manual de Uso</a>
       </td>
-      <td style="width: 5%;">
+      <td style="width: 10%;">
 
       </td>
     </tr>

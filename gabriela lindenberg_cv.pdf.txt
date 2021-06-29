@@ -1,0 +1,341 @@
+ 
+Gabriela Ana Lindenberg  
+Información 
+personal         
+ 
+• 
+Nacionalidad: Argentina  
+• 
+Fecha nacimiento: 12/05/1969 
+• 
+Lugar de nacimiento: Capital Federal 
+• Estado civil: Casada 
+Educación 
+Escuela Secundaria: 1982-1986  Normal Nº7 “José María Torres” 
+                                 Título obtenido: Bachiller  Biológico 
+ 
+Nivel Terciario: 1989-1991  Instituto de tecnología O.R.T. 
+                           Título obtenido: Analista de Sistemas 
+ 
+Post-grado: 1993   Instituto de Tecnología O.R.T. 
+                    Título obtenido: Master en Informática Administrativa 
+                     
+Cursos de especialización:* Septiembre 1995 
+                                               Jornadas de Inf. Médica del Hospital Italiano            
+                                               Duración: 17 horas 
+ 
+                                            *Mayo 1996 
+                                              Curso Avanzado de Informática Médica                  
+                                              Universidad del Salvador          
+                                              Duración: 4 meses 
+ 
+                                            *1997 
+                                              Redes Novell 4.11  
+                                              EXO Training Center 
+ 
+                                           * 2001 
+                                              Visual Basic 6 nivel inicial 
+ 
+          * 2002 
+                                              Curso Networking  
+                                              New Horizons Computer Learning Center 
+          Duración: 8 horas 
+ 
+   
+ 
+Mario Bravo 258 1º "A" 
+Capital Federal 
+ 
+ Teléfonos: 4861-2436 
+                  154-4073142 
+ alindenberg@indec.mecon.gov.ar 
+
+-----
+                                     * 2003 
+                                       Administering a Microsoft SQL Server 2000 Database  
+   (curso 2072) - New Horizons Computer Learning Center 
+ 
+   Programming a Microsoft SQL Server 2000 Database 
+   (curso 2073) - New Horizons Computer Learning Center 
+ 
+                                    * 2005 
+                                       MS Project  
+                                       I.N.D.E.C. 
+   Duración: 16 horas 
+ 
+                                    * 2006 
+                                       Fast Track to Power Builder 10 - Sybase Argentina 
+                                       Duración: 40 horas 
+ 
+                                    * 2011 
+                                       Metodologías Ágiles - SCRUM –  
+                                       INDEC 
+                                       Duración: 20 horas 
+ 
+                      Teoría de la Programación orientada a objetos  -                                
+INDEC 
+                                       Duración: 20 horas 
+ 
+                                    * 2013 
+                                       PHP – Niveles inicial, medio y avanzado  
+                                       INDEC 
+                                       Duración: 60 horas 
+ 
+                                    * 2016 
+                                       Formación de QA Testers - Teórico  
+                                       EXO Training Center 
+                                       Duración: 20 horas 
+ 
+ 
+ 
+
+-----
+Experiencia 
+profesional 
+1991 - 1993 
+PANDA’S S.A. 
+Cargo desempeñado: Analista Programador   
+ 
+• 
+Relevamiento, análisis y diseño de sistemas en entorno D.O.S. monousuario  
+• 
+Asistencia a usuarios. 
+• 
+Programación Clipper Summer 87  
+• 
+Seguimiento y control de implementaciones 
+ 
+01-01-1993 al 31-01-2005  OBRA SOCIAL PERSONAL MINIST. ECONOMIA                             
+Cargo desempeñado: Director Departamento Computación, a cargo del 
+Departamento de Sistemas. 
+ 
+• 
+Tareas administrativas y de organización departamental 
+• 
+ Relevamiento, análisis y diseño de sistemas en entorno redes Novell  
+• 
+Líder de proyecto y coordinación equipos de trabajo interdepartamentales –áreas 
+administrativas y médicas- 
+• 
+Migración a sistemas SQL  
+• 
+Asistencia y capacitación a usuarios 
+• 
+Diseño de página web (www.osme.org.ar) e intranet. 
+• 
+Desarrollo de un plan de migración de sistemas a entorno Windows  
+• 
+Diseño y programación de sistemas de tipo administrativo y de uso médico: 
+-  Fiscalización de facturación farmacias y prestadores médicos 
+              -  Internación (incluye admisión, indicaciones médicas y de enfermería, estudios,  
+                 diagnósticos, pedidos de medicación y su administración, etc.) 
+              - Cuentas corrientes / Tesorería 
+              - Mesa de Entradas y Salidas 
+              - Coseguros y/o copagos 
+              - Reintegros médicos, de guarderías, geriatrías, etc 
+              - Liquidación de haberes 
+              - Conformación y actualización de Vademecum  
+              - Consultorios externos (administración de turnos) 
+              - Estadísticas internas y de rendición al S. S. Salud 
+              - Derivaciones y/o autorizaciones de prácticas médicas o de laboratorio 
+              - Presupuesto / Compras 
+ 
+01-06-2004 al 31-01-2007     TEKNO SALUD                              
+Cargo desempeñado: Planificación de implementación sistemas informáticos,  
+ líder de proyecto. 
+• 
+Relevamiento y análisis. 
+• 
+Implementación de sistema de gestión integral para Obras Sociales.  
+• 
+Definición plan de migración.  
+• 
+Capacitación a usuarios.  
+• 
+Gestión de cambios/errores. 
+ 
+ 
+ 
+ 
+ 
+
+-----
+01-02-2005 a la fecha   INDEC – Instituto Nacional de Estadísticas y Censos – 
+ 
+     Cargo desempeñado: Planeamiento y organización de proyectos, gestión de 
+planificación del Testing y aseguramiento de calidad para aplicaciones informáticas. 
+ 
+ 
+Desde mi ingreso en el año 2005, me he desempeñado en el área de Desarrollo como  
+Líder de Proyecto y Analista Funcional.  A partir del mes de marzo 2016, me  
+encuentro a cargo de la Coordinación del área Gestión de Calidad.   
+ 
+El área Gestión de Calidad tiene como misión asegurar la calidad del software desarrollado  
+en la Dirección de Informática y garantizar que el producto desarrollado responde 
+efectivamente a las necesidades del usuario (requerimientos funcionales) y a las  
+necesidades del Instituto. 
+Dado la reciente creación del área, he implementado su funcionamiento inicial a  
+través de la creación de normas, procedimientos y la confección de un manual de  
+referencia del proceso de Testing y su significado y valor para el Instituto; sumado a la  
+configuración y puesta a punto de una herramienta de gestión de los proyectos del área  
+(Jira) para interactuar en forma ágil y efectiva con el área de Desarrollo, mejorando  
+de este modo los tiempos de respuesta en las tareas y documentando todas las  
+instancias del proceso. 
+ 
+Tareas desarrolladas en el área Gestión de Calidad: 
+• 
+Planificación, organización y dirección del área de Control y Aseguramiento de Calidad de 
+aplicaciones informáticas 
+• 
+Gestión del cumplimiento de requerimientos por proyectos. 
+• 
+ Planificación, liderazgo y gestión de proyectos informáticos. 
+• 
+Planificación y asesoramiento en la formulación de casos de prueba y su documentación,  
+       a fin de garantizar que las aplicaciones cumplen con lo requerido por el usuario. 
+• 
+Asesoramiento en el análisis de requerimientos funcionales y no funcionales de cada  
+       aplicación a testear. 
+• 
+Planificación del ciclo de Test. 
+• 
+Asesoramiento sobre distintos mecanismos de documentación del Testing mediante 
+herramientas informáticas. 
+• 
+Gestión de mecanismos de documentación de los casos de prueba, sus resultados y  
+       devolución al equipo de desarrollo. 
+• 
+Asesoramiento en la planificación de los casos de prueba y su documentación, a fin de 
+garantizar el correcto funcionamiento de las aplicaciones en diversos escenarios y ambientes. 
+• 
+Gestión de la documentación de las características técnicas y de las pruebas funcionales  
+        sobre los sistemas informáticos. 
+• 
+Dirección de la ejecución del plan de pruebas. 
+• 
+Formulación de propuestas de mejora surgidas a partir del Test de las aplicaciones,  
+       analizadas en forma integral con los requerimientos tanto funcionales como no funcionales. 
+• 
+Interacción con Direcciones usuarias a fin de asesorar y garantizar la satisfacción de los  
+ mismos con las aplicaciones desarrolladas según sus requerimientos funcionales. 
+• 
+Asesoramiento e interacción con equipos de desarrollo durante y al cierre del ciclo de  
+ pruebas (equipo de desarrollo interno / equipos de desarrollo de otras Direcciones / equipos de 
+desarrollo externos) 
+• 
+Verificación con las distintas coordinaciones que integran la Dirección de Informática de la 
+performance y estabilidad de las aplicaciones. 
+• 
+Verificación periódica de las aplicaciones en Producción. 
+
+-----
+En el área de Desarrollo he desarrollado monitoreo de avance de proyectos, tareas de  
+análisis, diseño de aplicaciones Web y base de datos, programación, capacitación a  
+usuarios, administración de base de datos, seguimiento y control del proceso 
+ de implementación interactuando con otras áreas 
+de la Dirección de Informática (redes y comunicaciones, dba, administración de servidores) 
+ 
+Lenguajes de Programación:  ASP, PHP, .Net, JavaScript, Angular 
+Bases de dato: PostgreSQL, SQLServer, Oracle 
+ 
+• 
+Seguimiento y control del proceso de implementación. 
+• 
+Gestión de cambios y reportes de error. 
+• 
+Coordinación de Mesa de Ayuda informática en operativos censales. 
+• 
+Monitoreo de avance de proyectos. 
+ 
+Algunos de los proyectos en los que participado/liderado: 
+- 
+Inventario de Operaciones Estadísticas Nacional   
+- 
+Inventario de Operaciones Estadísticas Mercosur 
+- 
+Publicación en Secretaría del Mercosur del Inventario de Operaciones Estadísticas 
+Consolidado  
+- 
+Sistema de gestión Patrimonio – Activo fijo 
+- 
+Sistema de captura de inventarios con lectora óptica 
+- 
+Sistema de Administración de archivos e imágenes Dirección Jurídicos y Despacho 
+- 
+Sistema de Gestión de Asistencia a Eventos organizados por el Instituto 
+- 
+Sistema de impresión de credenciales  
+- 
+Relevamiento del Sistema Estadístico Nacional  
+- 
+Relevamiento del Sistema Estadístico Provincial 
+- 
+Censo Económico Nacional  
+- 
+Censo Nacional Agropecuario 2008 
+- 
+Censo Nacional de Población, Hogares y Viviendas 2010  
+- 
+Coordinación encuestas 2da. Etapa Censo Económico Nacional  
+- 
+Encuestas Anuales Económicas 2006 a 2010 
+- 
+Encuesta sobre Autopartes 
+- 
+Administración de estructuras censales provinciales/nacionales 
+- 
+Generación y seguimiento de material de campo 
+- 
+Asignación de cargas a encuestadores 
+- 
+Toma de datos en dispositivo móvil para encuestas 
+- 
+Encuesta de Calidad de Vida Adultos Mayores 
+- 
+Encuesta Nacional de Gastos de los Hogares 
+- 
+Encuesta de Movilidad Domiciliaria 
+- 
+Encuesta Nacional sobre Salud Sexual y Reproductiva 
+- 
+Administración de estructura y credenciales IPCNu 
+- 
+Listado de Establecimientos Comerciales y/o Prestación de Servicios 
+- 
+Censo Nacional Agropecuario 2018 
+- 
+Archivo de domicilios de la República Argentina 
+- 
+Encuesta Nacional de Gastos de los Hogares 2018 
+- 
+Encuesta Nacional de Victimización 
+- 
+Encuesta Industrial mensual 
+- 
+Balanza de pagos 
+- 
+Encuesta de Ocupación hotelera 
+- 
+Encuesta de Turismo Internacional 
+- 
+Encuesta Nacional sobre el perfil de las personas con discapacidad  
+
+-----
+Tareas docentes 
+1996 – 1997                     Instituto de Tecnología O.R.T. 
+Ayudante de cátedra de la materia Seminario de Sistemas 
+ 
+Idiomas  
+ 
+ 
+Inglés: nivel avanzado (lectura y conversación) 
+Hebreo: nivel intermedio (lectura y conversación) 
+Italiano: nivel básico (lectura y conversación) 
+ 
+ 
+ 
+ 
+ 
+ 
+
+-----

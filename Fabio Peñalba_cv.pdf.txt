@@ -1,0 +1,60 @@
+ 
+ 
+Desarrollo Personal de Carrera 
+ 
+ 
+ 
+ 
+1 
+ 
+Modelo Lógico Relacional 
+ 
+ 
+ 
+Universidad Nacional de Lomas de Zamora 
+Facultad de Ingeniería 
+Licenciatura en Gestión de la Información 
+Tesis Final 
+Alumnos: 
+Avila María Lorena 
+Iñarra Daniel 
+Lindenberg Gabriela 
+Peñalva Fabio 
+Docente: 
+Carlos Ruiz 
+ 
+ 
+
+-----
+ 
+ 
+Desarrollo Personal de Carrera 
+ 
+ 
+ 
+ 
+2 
+ 
+Modelo Lógico Relacional 
+ 
+ 
+ 
+ 
+
+-----
+ 
+ 
+Desarrollo Personal de Carrera 
+ 
+ 
+ 
+ 
+3 
+ 
+Lote de Datos para Editar CV 
+ 
+ 
+Las tablas agrupadas en color azul son del AD, las verdes son tablas referenciales y la 
+amarilla transaccional. 
+
+-----

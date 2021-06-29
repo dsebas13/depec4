@@ -2,7 +2,20 @@
 
 {% block body %}
 <h1> Bienvenido </h1>
-<table>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{message}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<table  style="margin-bottom: 100px;">
     <tr>
         <td style="width: 15%;"></td>
         <td style="text-align: justify;">

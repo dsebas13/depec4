@@ -1,5 +1,5 @@
 body {
-  background-color: #e2f0fb
+  background-color: #e2f0fb;
 
 }
 
@@ -103,6 +103,18 @@ body {
 
   .position-fixed {
     position: relative;
+  }
+
+  .footer {
+    position: static;
+    left: 0;
+    bottom: -10px;
+    
+    width: 100%;
+    height: 25vh;
+    background-color: red;
+    color: white;
+    text-align: center;
   }
 
   .footer2{

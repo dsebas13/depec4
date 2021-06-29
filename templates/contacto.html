@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<h1> Envianos tu consulta </h1>
+<table style="margin-bottom: 100px;">
+    <tr>
+        <td style="width: 15%;"></td>
+        <td style="text-align: justify;">
+            <form action="/contacto" method="POST">
+                <h5>
+                    <br>
+                    <label for="user">De:</label> <br> <br>
+                    <label for="user">{{session['name'].capitalize()}} {{ session['surname'].capitalize()}} </label>
+                    <br>
+                    <br>
+                    <br>
+                    <label for="email">Email:</label> <br> <br>
+                    <label for="email">{{session['username']}} </label>
+                    <br>
+                    <br>
+                    <br>
+                    <label for="consulta">Consulta: </label> <br>
+                    <textarea required name="consulta" id="" cols="90" rows="5"></textarea>
+                    <br>
+                    <br>
+                    <button type="submit" right style="float: right;" class="btn btn-primary "><i
+                            class="fas fa-paper-plane fa-2x"></i> </button>
+                </h5>
+            </form>
+        </td>
+        
+        <td style="width: 15%;"></td>
+    </tr>
+</table>
+
+
+
+{% endblock %}
